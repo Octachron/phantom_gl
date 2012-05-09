@@ -1,16 +1,14 @@
-#! /usr/bin/ocaml unix.cma
+#! /opt/godi/bin/ocaml unix.cma
 
 
 let cc="ocamlbuild"
 
-let libs=""
-let dIncl=""
-let dLibs=dIncl
+let pkg="sdl,lablGL"
 let target="Wyrd.native"
 
 
 
-let command= Printf.sprintf " %s %s" cc  target  
+let command= Printf.sprintf " %s -use-ocamlfind -package %s %s" cc pkg target  
 
 
 
