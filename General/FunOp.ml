@@ -1,0 +1,4 @@
+
+exception Impossible;;
+
+let (<|) f g x=f(g(x))
