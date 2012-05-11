@@ -3,6 +3,8 @@ type t={x:float;y:float;z:float}
 let print v=Printf.printf "(%f,%f,%f)" v.x v.y v.z
 let create x y z = {x;y;z} 
 
+let zero={x=0.;y=0.;z=0.}
+
 let (+) v w={x=v.x+.w.x;y=v.y+.w.y;z=v.z+.w.z}
 let (-) v w={x=v.x-.w.x;y=v.y-.w.y;z=v.z-.w.z}
 let ( * ) s v={x=s*.v.x;y=s*.v.y;z=s*.v.z}
@@ -19,6 +21,9 @@ let projection axe v= (axe *: v) * axe
 let normalisation v= 
  let n= norm v in
 (n,v/n)
+
+let normalized v= let n=norm v in v/n
+
 
 let rotation ax t v= 
 	let p = projection ax v in
