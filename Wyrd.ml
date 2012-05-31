@@ -1,13 +1,5 @@
 open FunOp
 
-let ()=
-	let v=Vector.create 1. 0. 0. 
-	and w=Vector.create 1. 0. 1.
-	and h=Hyperplane.create (Vector.create 1. 0. 0.)  0.
-	in
-	print_float VectOp.(h||(2.*v-3.*w))
-
-
 
 	
 
@@ -63,6 +55,9 @@ let  () =
   Sdl.init [`VIDEO];
   ignore (Sdlvideo.set_video_mode ~w:500 ~h:500 ~bpp:0 [`OPENGL; `DOUBLEBUF]);
   GlM.glewInit();
+  let src=Utils.load "shaders/test.frag"
+  and shvert= Shader.createVert () in
+  Printf.printf "vertid %d \n" (Shader.uid shvert);
   Gl.enable `depth_test;
   loop 0.;
   Sdl.quit()

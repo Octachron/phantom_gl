@@ -42,31 +42,16 @@ let map=List.map
 
 
 let segint h l r= 
-	Vector.print l; print_string" -><- "; Vector.print r; print_newline() ;
-        Hyperplane.print h; print_newline();
 	let p,n= VectOp.(h||l, h||r) in
 	let t= n/.(n-.p) in
-	Printf.printf "Time : %f \n \n " t;
 	VectOp.(t*l  + (1.-.t) * r) 
 
 let revcat l1 l2= List.fold_left ( fun l x-> x::l) l2 l1 
 
-let debug p n l= Printf.printf "%s : \n" n; p l; Printf.printf "\n"
-
-let print_l= List.iter Vector.print
 
 type edge = Nil | All | Seg of segment 
 
-let dbg p s x =Printf.printf "%s : " s; p x; print_newline()
-let dbgl= dbg (List.iter (fun x -> Vector.print x; print_string " "))
-let dbgv= dbg (Vector.print)
-
-let dbgc (f,l,e) =
- Printf.printf "Liste partielle : \n";
- dbgv "first" f; dbgl "mid" (List.rev l); dbgv "last" e; print_newline()
-
 let intersection h p=
-	dbgl "poly" p;
 	let test a= VectOp.(h||a)>0. in
 	let update state (f,l,e) a=if state=true then (f,a::l,a) else (f,l,a) in
 	let commit (f,l,e) ll = (f, List.rev l, e)::ll in
@@ -75,7 +60,7 @@ let intersection h p=
                           if t=state then 
                            contract state ll (update state current a) q
                           else (
-                           dbgc current; contract t (commit current ll) (a,(if t then [a] else []),a) q )
+                            contract t (commit current ll) (a,(if t then [a] else []),a) q )
 		| [] -> commit current ll in
 	let ( => ) d e=segint h d e in
 	let fusion fp lp fn ln mid=let l,r = ln => fp, lp => fn  in
@@ -95,40 +80,7 @@ let intersection h p=
 	                                                   Seg {l;r},mid1@(l::r::mid2)
 	| _ -> Nil, []
 
-(*
-let intersection h p=
-Printf.printf "Intersection plane\n"; print_newline();
-dbg Hyperplane.print "plan" h; dbgl "origin" p;
-let test a =VectOp.(h||a)>0. in 
-let rec normalize neg l= match l with
-| a::q -> if test a then neg,l else normalize (a::neg) q
-| [] -> (neg, [] ) in
-let rec sep res p l = match l with
-| a::q -> if test a then sep (p::res) a q else (p::res,p,l)
-| [] -> (p::res,p,[])  in
-let lastp neg1 neg2= match neg1 with
-| a::q -> a
-| [] -> List.fold_left (fun acc x -> x) (List.hd neg2) neg2 
-in
-let neg1, norm = normalize [] p in
-dbgl "neg1" neg1; dbgl "norm" norm;
-match norm with
-| [] -> (Nil,[])
-| _ -> let fpos=List.hd norm  
-       and pos, lpos, neg2 = sep [] (List.hd norm) (List.tl norm) in
-	dbgl "pos" pos; dbgl "neg2";
-       match neg1, neg2 with 
-         | [],[] -> All,List.rev(lpos::pos)
-         | _,_ -> let lneg= lastp neg1 neg2
-                  and fneg= lastp neg2 neg1 in
-			dbgv "fpos" fpos; dbgv "lpos" lpos; dbgv "fneg" fneg; dbgv "lneg" lneg;
-                  let l = segint h lneg fpos
-                  and r=segint h lpos fneg in		
-                Seg {l;r}, l::List.rev(r::pos) 
-*)
 let reconnect segs=
-	List.iter (fun {l;r} -> Vector.print l; print_string "->"; Vector.print r; Printf.printf "\n") segs;
-	print_newline();
 	let test a b= Vector.(norm2 (a-b))< 1e-6 in 
 	let rec reconn resv pts last= function
 		| ({l;r} as s)::q ->if test last l then

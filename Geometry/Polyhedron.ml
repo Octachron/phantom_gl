@@ -18,7 +18,6 @@ let open Hyperplane in
 let map f= List.map (fun (h,p) -> (h,Polygone.map f p) ) 
 
 let intersection h ph=
-Printf.printf "Polyhedron\n"; print_newline();
 let f (lf,le) (g,p) = 
  let (i,p') = Polygone.intersection h p in 
  match i with
