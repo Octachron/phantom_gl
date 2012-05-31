@@ -1,1 +1,6 @@
 _build
+*~
+setup.*
+myocamlbuild.ml
+*_stubs.clib
+*.native

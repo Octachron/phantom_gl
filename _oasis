@@ -1,0 +1,17 @@
+OASISFormat: 0.3
+Name:        Wyrd
+Version:     0.01
+Synopsis:    Physic library
+Authors:     Ego
+License:     LGPL
+
+
+Executable  Wyrd
+  Path:       .
+  BuildTools: ocamlbuild
+  MainIs:     Wyrd.ml
+  BuildDepends: sdl,lablGL
+  CSources: C/opengl_glue.c
+  CClib: -lGL -lGLEW
+  CompiledObject: native
+  

@@ -1,4 +1,30 @@
-<**/*.ml> or <**/*.mli> or <**/*.mlpack> or <**/*.ml.depends>: ocaml
-
-
-<Geometry> or <General> : include
+# OASIS_START
+# DO NOT EDIT (digest: 3fd7412bc20f4a1064bb80c4339091ab)
+# Ignore VCS directories, you can use the same kind of rule outside 
+# OASIS_START/STOP if you want to exclude directories that contains 
+# useless stuff for the build process
+<**/.svn>: -traverse
+<**/.svn>: not_hygienic
+".bzr": -traverse
+".bzr": not_hygienic
+".hg": -traverse
+".hg": not_hygienic
+".git": -traverse
+".git": not_hygienic
+"_darcs": -traverse
+"_darcs": not_hygienic
+# Executable Wyrd
+"Wyrd.native": oasis_executable_wyrd_cclib
+"libWyrd_stubs.lib": oasis_executable_wyrd_cclib
+"dllWyrd_stubs.dll": oasis_executable_wyrd_cclib
+"libWyrd_stubs.a": oasis_executable_wyrd_cclib
+"dllWyrd_stubs.so": oasis_executable_wyrd_cclib
+"Wyrd.native": use_libWyrd_stubs
+"Wyrd.native": pkg_sdl
+"Wyrd.native": pkg_lablGL
+<*.ml{,i}>: pkg_sdl
+<*.ml{,i}>: pkg_lablGL
+"C/opengl_glue.c": pkg_sdl
+"C/opengl_glue.c": pkg_lablGL
+# OASIS_STOP
+<General> or <Geometry> or <Opengl> : include

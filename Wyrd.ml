@@ -32,10 +32,20 @@ let displayH h=
 	 GlDraw.ends (); 
          Sdlgl.swap_buffers()
 	
+let modern ()=
+let rec loop ()= match Sdlevent.poll() with
+| Some Sdlevent.KEYDOWN {Sdlevent.keysym=Sdlkey.KEY_ESCAPE} | Some Sdlevent.QUIT -> ()
+| _ -> loop ()
+in
+ Sdl.init [`VIDEO];
+ignore (Sdlvideo.set_video_mode ~w:500 ~h:500 ~bpp:0 [`OPENGL; `DOUBLEBUF]);
+GlM.glewInit ();
+Gl.enable `depth_test;
+  loop ();
+  Sdl.quit()
 
 
-
-let () =
+let  () =
  let hv v= Hyperplane.create v 0.25 in
  let z=Vector.zero in
  let vl= Vector.( [{z with x= -1.} ; {z with y= -1.}; {z with z= -1.}  ] ) in
@@ -52,6 +62,7 @@ let () =
   in
   Sdl.init [`VIDEO];
   ignore (Sdlvideo.set_video_mode ~w:500 ~h:500 ~bpp:0 [`OPENGL; `DOUBLEBUF]);
+  GlM.glewInit();
   Gl.enable `depth_test;
   loop 0.;
   Sdl.quit()
