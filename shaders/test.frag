@@ -1,6 +1,7 @@
 #version 120
 
 varying vec2 pos;
+
 uniform float time;
 uniform vec2 center;
 uniform float zoom;
@@ -43,6 +44,7 @@ vec4 colorize( vec2 v)
 
 void main(void)
 {
+
     vec2 coord=zoom*pos-vec2(0.5,0)+center;
     gl_FragColor = colorize(fractal(coord,101));
 }

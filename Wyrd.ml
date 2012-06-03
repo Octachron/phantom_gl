@@ -55,9 +55,12 @@ let  () =
   Sdl.init [`VIDEO];
   ignore (Sdlvideo.set_video_mode ~w:500 ~h:500 ~bpp:0 [`OPENGL; `DOUBLEBUF]);
   GlM.glewInit();
-  let src=Utils.load "shaders/test.frag"
-  and shvert= Shader.createVert () in
-  Printf.printf "vertid %d \n" (Shader.uid shvert);
+  let srcV=Utils.load "shaders/test.vert" and srcF = Utils.load "shaders/test.frag" in 
+  let vert= Shader.compileVertFrom srcV and  frag = Shader.compileFragFrom srcF in 
+  let print x= Printf.printf "Shader id %d \n" (Shader.uid x) 
+  in
+   print vert; print frag;
+  let prog=Program.rise vert frag in
   Gl.enable `depth_test;
   loop 0.;
   Sdl.quit()
