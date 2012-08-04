@@ -37,20 +37,24 @@ Gl.enable `depth_test;
   Sdl.quit()
 
 
+type state={mist: (float,int) Uniform.t; pos: (Vector.t,int) Uniform.t}
+
+
 let  () =
  let hv v= Hyperplane.create v 0.25 in
  let z=Vector.zero in
  let vl= Vector.( [{z with x= -1.} ; {z with y= -1.}; {z with z= -1.}  ] ) in
  let th= Polyhedron.tetrahedron 1. in
  let th'= List.fold_left (fun ph v -> Polyhedron.intersection (hv v) ph) th vl in
- let rotation  = Vector.(rotation (normalized (create 1. 1. 0.)) )
+ let rotation  = Vector.(create 1. 1. 0. |> normalized |> rotation )
  and trans t = Vector.((+) (t* (create 1. 0. 0.)))
  in 	
- let rec loop t =
+ let rec loop state t =
+   let state= Uniform.(state =$ (cos t, Vector.({x=cos t; y=sin t; z=0.})) ) in
     match Sdlevent.poll() with
     | Some Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE }
     | Some Sdlevent.QUIT -> ()
-    | _ -> displayH (Polyhedron.map (rotation t) th'); loop (t+.0.01)
+    | _ ->  displayH (Polyhedron.map (rotation t) th'); loop state (t+.0.01)
   in
   Sdl.init [`VIDEO];
   ignore (Sdlvideo.set_video_mode ~w:500 ~h:500 ~bpp:0 [`OPENGL; `DOUBLEBUF]);
@@ -61,8 +65,12 @@ let  () =
   in
    print vert; print frag;
   let prog=Program.rise vert frag in
+  let mist=Uniform.scalar prog "mist" 0. 
+  and pos=Uniform.vector prog "pos" Vector.zero
+in
+  ignore <| Uniform.(mist =$ 1.);
   Gl.enable `depth_test;
-  loop 0.;
+  loop (Uniform.join mist pos) 0.;
   Sdl.quit()
 
 

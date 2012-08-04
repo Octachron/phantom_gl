@@ -1,5 +1,5 @@
 open FunOp
-type t={x:float;y:float;z:float}
+type t= {x:float;y:float;z:float}
 let print v=Printf.printf "(%f,%f,%f)" v.x v.y v.z
 let create x y z = {x;y;z} 
 
@@ -14,7 +14,7 @@ let ( *: ) v w= v.x*.w.x +. v.y*.w.y+.v.z*.w.z
 let ( *^ ) v w  = {x=v.y*.w.z-.v.z*.w.y; y =v.z*.w.x -. v.x *. w.z; z= v.x*.w.y -. v.y *. w.x}
 
 let norm2 v = v*:v
-let norm = sqrt <| norm2 
+let norm =  sqrt <> norm2 
  
 let projection axe v= (axe *: v) * axe
 
