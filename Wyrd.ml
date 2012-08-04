@@ -36,6 +36,7 @@ Gl.enable `depth_test;
   loop ();
   Sdl.quit()
 
+let (|>) x g = g x
 
 let  () =
  let hv v= Hyperplane.create v 0.25 in
@@ -43,7 +44,7 @@ let  () =
  let vl= Vector.( [{z with x= -1.} ; {z with y= -1.}; {z with z= -1.}  ] ) in
  let th= Polyhedron.tetrahedron 1. in
  let th'= List.fold_left (fun ph v -> Polyhedron.intersection (hv v) ph) th vl in
- let rotation  = Vector.(rotation (normalized (create 1. 1. 0.)) )
+ let rotation  = Vector.(create 1. 1. 0. |> normalized |> rotation )
  and trans t = Vector.((+) (t* (create 1. 0. 0.)))
  in 	
  let rec loop t =
@@ -61,6 +62,8 @@ let  () =
   in
    print vert; print frag;
   let prog=Program.rise vert frag in
+  let mist=Uniform.scalar prog "mist" 0. in
+  Uniform.(mist =$ 1.);
   Gl.enable `depth_test;
   loop 0.;
   Sdl.quit()

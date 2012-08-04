@@ -1,10 +1,8 @@
 #version 120
-
-attribute vec2 coord;
-varying vec2 pos;
+uniform float mist;
 
 void main(void)
 {
-    gl_Position=vec4(coord,0,1);
-    pos=coord;
+    gl_Position=gl_Vertex;
+    gl_FrontColor = (vec4(mist)+ gl_Color)/2;
 }

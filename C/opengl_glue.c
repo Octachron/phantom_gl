@@ -111,7 +111,25 @@ CAMLreturn(Val_unit);
 
 
 
+/************************** 
+Opengl uniform functions 
+***************************/
+CAMLprim value mglGetUniformLocation(value program, value name){
+  CAMLparam2(program,name);
+  GLuint id=Int_val(program);
+  char* s = String_val(name);
+  GLuint ret=glGetUniformLocation(id,s);
+  CAMLreturn(Val_int(ret));
+}
 
+CAMLprim value mglUniform1f(value mloc,value mx)
+{
+  CAMLparam2(mloc,mx);
+  GLuint loc=Int_val(mloc);
+  float x=Double_val(mx);
+  glUniform1f(loc,x);
+  CAMLreturn(Val_unit);
+}
 
 
 

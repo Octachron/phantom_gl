@@ -1,5 +1,5 @@
 open FunOp
-type t={x:float;y:float;z:float}
+type t= {x:float;y:float;z:float}
 let print v=Printf.printf "(%f,%f,%f)" v.x v.y v.z
 let create x y z = {x;y;z} 
 
