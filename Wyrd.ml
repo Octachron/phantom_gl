@@ -36,6 +36,7 @@ Gl.enable `depth_test;
   loop ();
   Sdl.quit()
 
+let (|>) x g = g x
 
 type state={mist: (float,int) Uniform.t; pos: (Vector.t,int) Uniform.t}
 
@@ -65,10 +66,15 @@ let  () =
   in
    print vert; print frag;
   let prog=Program.rise vert frag in
+<<<<<<< HEAD
   let mist=Uniform.scalar prog "mist" 0. 
   and pos=Uniform.vector prog "pos" Vector.zero
 in
   ignore <| Uniform.(mist =$ 1.);
+=======
+  let mist=Uniform.scalar prog "mist" 0. in
+  Uniform.(mist =$ 1.);
+>>>>>>> orion
   Gl.enable `depth_test;
   loop (Uniform.join mist pos) 0.;
   Sdl.quit()

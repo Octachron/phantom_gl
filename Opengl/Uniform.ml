@@ -17,8 +17,6 @@ let scalar=create GlM.rglUniform1f
 let vsplit f v= Vector.(f v.x v.y v.z)
 let vector=create  ( vsplit <> GlM.rglUniform3f )  
 
-
-
 let content u = u.x
 let uid u = u.uid
 
