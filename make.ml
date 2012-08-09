@@ -1,9 +1,9 @@
-#! /opt/godi/bin/ocaml unix.cma
+#! /usr/bin/ocaml unix.cma
 
 
 let cc="ocamlbuild"
 
-let pkg="sdl,lablGL"
+let pkg="sdl,lablgl"
 let target="Wyrd.native"
 
 
