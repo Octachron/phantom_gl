@@ -2,11 +2,11 @@ type program =int
  
 let uid p= p
 
-let create = GlM.rglProgramCreate
-let attach p ~vert ~frag = GlM.rglProgramAttach p (Shader.uid frag) ; GlM.rglProgramAttach p (Shader.uid vert) 
-let link = GlM.rglProgramLink
-let use =GlM.rglProgramUse
+let genUid = Rgl.programCreate
+let attach p ~vert ~frag = Rgl.programAttach p (Shader.uid frag) ; Rgl.programAttach p (Shader.uid vert) 
+let link = Rgl.programLink
+let use =Rgl.programUse
 
-let rise ~vert ~frag = 
-  let p =create() in
+let create ~vert ~frag = 
+  let p =genUid() in
     attach p vert frag; link p; use p; p

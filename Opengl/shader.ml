@@ -3,11 +3,11 @@ type 'a t = int
 
 let uid sh = sh
 
-let createVert ()= GlM.rglShaderCreate(0)
-let createFrag ()= GlM.rglShaderCreate(1)  
+let createVert ()= Rgl.shaderCreate(0)
+let createFrag ()= Rgl.shaderCreate(1)  
 
-let load  = GlM.rglShaderLoad  
-let compile = GlM.rglShaderCompile
+let load  = Rgl.shaderLoad  
+let compile = Rgl.shaderCompile
 
 let loadAndCompile s sh= load sh s; compile sh 
 

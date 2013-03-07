@@ -1,31 +1,47 @@
 open FunOp
-type t= {x:float;y:float;z:float}
-let print v=Printf.printf "(%f,%f,%f)" v.x v.y v.z
-let create x y z = {x;y;z} 
 
-let zero={x=0.;y=0.;z=0.}
+module type Axioms=
+sig
+	type vect
+	val zero : vect
+	val (+) : vect -> vect -> vect
+	val (-) : vect -> vect-> vect
+	val ( * ) : float -> vect -> vect
+	val ( / ) : vect -> float-> vect
+	
+	val ( *: ) : vect -> vect -> float 
 
-let (+) v w={x=v.x+.w.x;y=v.y+.w.y;z=v.z+.w.z}
-let (-) v w={x=v.x-.w.x;y=v.y-.w.y;z=v.z-.w.z}
-let ( * ) s v={x=s*.v.x;y=s*.v.y;z=s*.v.z}
-let ( / ) v s={x=v.x/.s;y=v.y/.s;z=v.z/.s}
+	val print : vect -> unit
+end
 
-let ( *: ) v w= v.x*.w.x +. v.y*.w.y+.v.z*.w.z
-let ( *^ ) v w  = {x=v.y*.w.z-.v.z*.w.y; y =v.z*.w.x -. v.x *. w.z; z= v.x*.w.y -. v.y *. w.x}
 
-let norm2 v = v*:v
+
+module Space = functor ( V : Axioms ) ->
+struct
+
+include(V)
+let norm2 v = V.(v*:v)
 let norm =  sqrt <> norm2 
  
-let projection axe v= (axe *: v) * axe
+let projection axe v= V.( (axe *: v) * axe )
 
 let normalisation v= 
  let n= norm v in
-(n,v/n)
+(n,V.(v/n))
 
-let normalized v= let n=norm v in v/n
+let normalized v= let n=norm v in V.(v/n)
 
 
-let rotation ax t v= 
-	let p = projection ax v in
-	cos(t) * (v-p) + p+  sin(t) * (ax *^ v) 
+type hyperplane = {normal : V.vect ; pos : float }
 
+
+let hyperplane v p={normal=v; pos=p}
+
+let (||) h v= V. ( h.normal *: v)  +. h.pos
+
+let print h=
+let v=h.normal in
+V.print v; Printf.printf ":%f" h.pos
+
+
+end

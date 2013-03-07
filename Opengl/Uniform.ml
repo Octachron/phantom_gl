@@ -1,22 +1,50 @@
 open FunOp
 
+type ('a,'b) t= {x:'a; uid:'b; send:'b->'a->unit}
+
+let create send prog name x=let uid = Rgl.getUniformLocation (Program.uid prog) name in
+{x;uid;send}
+
+let send {x; uid; send} = send uid x 
+let update u nex= let neu={ u with x=nex} in send u; neu
+let content u= u.x
+let uid u = u.uid
+
+let ( =$ ) = update
+
+let (=~) u f = let y=f u.x in
+u =$ y
+
+let join u1 u2= { x=u1.x,u2.x; uid=u1.uid,u2.uid; send= ( fun (id1,id2) (x1,x2) ->( u1.send id1 x1; u2.send id2 x2) ) }
+
+
+
+
+let vsplit f v= Vec3.(f v.x v.y v.z)
+let scalar=create Rgl.uniform1f
+let vector=create  ( vsplit <> Rgl.uniform3f )  
+
+
+
+module Gadt=
+struct
 type 'a named = {x:'a; uid : int}
 
 let uid {uid;_}=uid
 
-let withName prog name x= let uid = GlM.rglGetUniformLocation (Program.uid prog) name in
+let withName prog name x= let uid = Rgl.getUniformLocation (Program.uid prog) name in
 {x;uid}
 
 type _ t = 
 	| Scalar : float named -> float t
-	| Vec3 : Vector.t named -> Vector.t t 
+	| Vec3 : Vec3.t named -> Vec3.t t 
 	| Join : 'a t * 'b t -> ('a * 'b) t
 
-let vsplit f v= Vector.(f v.x v.y v.z)
+let vsplit f v= Vec3.(f v.x v.y v.z)
 
 let rec send  : type a. a t -> unit= function
-| Scalar {x;uid} -> GlM.rglUniform1f uid x
-| Vec3 {x;uid} ->     vsplit <> GlM.rglUniform3f <| uid <| x
+| Scalar {x;uid} -> Rgl.uniform1f uid x
+| Vec3 {x;uid} ->     vsplit <> Rgl.uniform3f <| uid <| x
 | Join (u1,u2) -> send u1; send u2 
 
 let rec update :type a. a t-> a -> a t=fun u x ->
@@ -38,31 +66,8 @@ let (=~) u f = (update u) <> f <> content
 let scalar prog name x=Scalar (withName prog name x)
 let vector prog name x=Vec3 (withName prog name x)
 let join u1 u2  =Join(u1,u2)
+end 
 
-module Archaic=
-struct
-type ('a,'b) t= {x:'a; uid:'b; send:'b->'a->unit}
-
-let create send prog name x=let uid = GlM.rglGetUniformLocation (Program.uid prog) name in
-{x;uid;send}
-
-let join u1 u2= { x=u1.x,u2.x; uid=u1.uid,u2.uid; send= ( fun (id1,id2) (x1,x2) ->( u1.send id1 x1; u2.send id2 x2) ) }
-
-let ( =$ ) u nex=
-u.send u.uid nex; {u with x=nex}
-
-let (=~) u f = let y=f u.x in
-u =$ y
-
-let scalar=create GlM.rglUniform1f
-
-let vsplit f v= Vector.(f v.x v.y v.z)
-let vector=create  ( vsplit <> GlM.rglUniform3f )  
-
-let content u = u.x
-let uid u = u.uid
-
-end
 
 module type UniformContent =
 sig
@@ -74,7 +79,7 @@ end
 module Gen= functor(X : UniformContent) ->
 struct
 type t={ x:X.t; uid:int }
-let create prog name x= let uid = GlM.rglGetUniformLocation (Program.uid prog) name in
+let create prog name x= let uid = Rgl.getUniformLocation (Program.uid prog) name in
 {x;uid}
 
 let ( =$ ) u nex=
@@ -88,7 +93,7 @@ end
 module ScalarCont=
 struct
 type t=float 
-let send=GlM.rglUniform1f
+let send=Rgl.uniform1f
 end
 
 module Scalar = Gen(ScalarCont)

@@ -5,13 +5,13 @@
 #include <caml/mlvalues.h>
 #include <stdio.h>
 
-CAMLprim value mglGlewInit(value unit){
+CAMLprim value rglGlewInit(value unit){
 CAMLparam1(unit);
 glewInit();
 CAMLreturn(Val_unit);
 }
 
-CAMLprim value mglShaderCreate(value type){
+CAMLprim value rglShaderCreate(value type){
 CAMLparam1(type);
 unsigned int gltype=Int_val(type)==0?GL_VERTEX_SHADER:GL_FRAGMENT_SHADER;
 unsigned int id=0;
@@ -23,7 +23,7 @@ if(id==0)
 	CAMLreturn (Val_int(id));
 }
 
-CAMLprim value mglShaderLoad(value id, value src){
+CAMLprim value rglShaderLoad(value id, value src){
 CAMLparam2(id,src);
 GLuint gid= Int_val(id);
 const char* s=String_val(src);
@@ -36,7 +36,7 @@ CAMLreturn (Val_unit);
 
 }
 
-CAMLprim value mglShaderCompile(value mid){
+CAMLprim value rglShaderCompile(value mid){
 	CAMLparam1(mid);
 
 	GLuint gid=Int_val(mid);
@@ -56,7 +56,7 @@ CAMLreturn(Val_unit);
 }
 
 
-CAMLprim value mglShaderDelete (value id){
+CAMLprim value rglShaderDelete (value id){
 CAMLparam1(id);
 glDeleteShader(Int_val(id));
 CAMLreturn(Val_unit);
@@ -67,24 +67,24 @@ Opengl program functions
 ***************************/
 
 
-CAMLprim value mglProgramCreate(value nil){
+CAMLprim value rglProgramCreate(value nil){
 CAMLparam1(nil);
 GLuint id = glCreateProgram();
 CAMLreturn (Val_int(id));
 }
-CAMLprim value mglProgramDelete(value id) { 
+CAMLprim value rglProgramDelete(value id) { 
 CAMLparam1(id);
 glDeleteProgram(Int_val(id));
 CAMLreturn(Val_unit);
 }
 
-CAMLprim value mglProgramAttach (value idp, value ids){
+CAMLprim value rglProgramAttach (value idp, value ids){
 CAMLparam2(idp,ids);
 glAttachShader(Int_val(idp), Int_val(ids));
 CAMLreturn(Val_unit);
 }
 
-CAMLprim value mglProgramLink(value mId){
+CAMLprim value rglProgramLink(value mId){
 CAMLparam1(mId);
 GLuint id= Int_val(mId);
     glLinkProgram(id);
@@ -103,7 +103,7 @@ GLuint id= Int_val(mId);
 CAMLreturn(Val_unit);
 }
 
-CAMLprim value mglProgramUse(value id) {
+CAMLprim value rglProgramUse(value id) {
 CAMLparam1(id);
  glUseProgram(Int_val(id)); 
 CAMLreturn(Val_unit);
@@ -114,7 +114,7 @@ CAMLreturn(Val_unit);
 /************************** 
 Opengl uniform functions 
 ***************************/
-CAMLprim value mglGetUniformLocation(value program, value name){
+CAMLprim value rglGetUniformLocation(value program, value name){
   CAMLparam2(program,name);
   GLuint id=Int_val(program);
   char* s = String_val(name);
@@ -122,7 +122,7 @@ CAMLprim value mglGetUniformLocation(value program, value name){
   CAMLreturn(Val_int(ret));
 }
 
-CAMLprim value mglUniform1f(value mloc,value mx)
+CAMLprim value rglUniform1f(value mloc,value mx)
 {
   CAMLparam2(mloc,mx);
   GLuint loc=Int_val(mloc);
@@ -131,7 +131,7 @@ CAMLprim value mglUniform1f(value mloc,value mx)
   CAMLreturn(Val_unit);
 }
 
-CAMLprim value mglUniform3f(value mloc, value mx, value my, value mz){
+CAMLprim value rglUniform3f(value mloc, value mx, value my, value mz){
 	CAMLparam4(mloc,mx,my,mz);
 	GLuint loc=Int_val(mloc);
         float x=Double_val(mx),y=Double_val(my),z=Double_val(mz);
@@ -140,6 +140,33 @@ CAMLprim value mglUniform3f(value mloc, value mx, value my, value mz){
 } 
 
 
+/*****
+Texture
+******/
+
+CAMLprim value rglGenTexture(value nil){
+CAMLparam1(nil);
+GLuint id=0;
+glGenTextures(1, &id);
+CAMLreturn(Val_int(id));
+}
+
+CAMLprim void rglBindTexture(value type, value id){
+GLuint cid= Int_val(id);
+GLuint ctype = Int_val(type);
+glBindTexture(ctype,cid);
+return;
+}
+
+CAMLprim void rglTexParameteri(value type, value parameter, value val){
+GLuint cparameter= Int_val(parameter);
+GLuint ctype = Int_val(type);
+GLuint cval = Int_val(val);
+
+
+glTexParameteri(ctype,cparameter,cval);
+return;
+}
 
 
 

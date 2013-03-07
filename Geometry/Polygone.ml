@@ -1,15 +1,15 @@
 
 
-type t=Vector.t list
+type t=Vec3.t list
 
 let cube s= 
-let open Vector in 
-let z= create 0. 0. 0. in
+let open Vec3 in 
+let z= zero in
 [z; {z with x=s}; {z with y=s; x=s}; {z with y=s} ]
 
 let create l=l
 
-type segment={l:Vector.t;r:Vector.t}
+type segment={l:Vec3.t;r:Vec3.t}
 
 let segments= function
 | [] -> []
@@ -22,8 +22,8 @@ let toList  = List.map (fun {r=x; _ } -> x)
 let print s=
  let rec mid= function
   | [] -> Printf.printf "]"
-  | [a] -> Vector.print a; mid []
-  | a::b::q-> Vector.print a; Printf.printf"->"; mid (b::q) 
+  | [a] -> Vec3.print a; mid []
+  | a::b::q-> Vec3.print a; Printf.printf"->"; mid (b::q) 
  in
 Printf.printf "["; mid s
 
@@ -42,9 +42,9 @@ let map=List.map
 
 
 let segint h l r= 
-	let p,n= VectOp.(h||l, h||r) in
+	let p,n= Vec3.(h||l, h||r) in
 	let t= n/.(n-.p) in
-	VectOp.(t*l  + (1.-.t) * r) 
+	Vec3.(t*l  + (1.-.t) * r) 
 
 let revcat l1 l2= List.fold_left ( fun l x-> x::l) l2 l1 
 
@@ -52,7 +52,7 @@ let revcat l1 l2= List.fold_left ( fun l x-> x::l) l2 l1
 type edge = Nil | All | Seg of segment 
 
 let intersection h p=
-	let test a= VectOp.(h||a)>0. in
+	let test a= Vec3.(h||a)>0. in
 	let update state (f,l,e) a=if state=true then (f,a::l,a) else (f,l,a) in
 	let commit (f,l,e) ll = (f, List.rev l, e)::ll in
 	let rec contract state ll current=function 
@@ -81,7 +81,7 @@ let intersection h p=
 	| _ -> Nil, []
 
 let reconnect segs=
-	let test a b= Vector.(norm2 (a-b))< 1e-6 in 
+	let test a b= Vec3.(norm2 (a-b))< 1e-6 in 
 	let rec reconn resv pts last= function
 		| ({l;r} as s)::q ->if test last l then
 				 reconn resv (r::pts) r q 

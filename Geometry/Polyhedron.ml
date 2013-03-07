@@ -1,8 +1,7 @@
-type t= (Hyperplane.t*Polygone.t) list
+type t= (Vec3.hyperplane*Polygone.t) list
 
 let tetrahedron s= 
-let open Vector in 
-let open Hyperplane in
+let open Vec3 in 
  let z={x=0.;y=0.;z=0.} in
  let vx= { z with x=s }
  and vy= {z with y=s}  
