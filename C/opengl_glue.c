@@ -140,6 +140,82 @@ CAMLprim value rglUniform3f(value mloc, value mx, value my, value mz){
 } 
 
 
+/****
+Vertex Array
+*****/
+
+
+
+CAMLprim value rglGetAttribLocation(value vprog, value name){
+CAMLparam2(id,src);
+GLuint prog= Int_val(prog);
+const char* s=String_val(src);
+
+int loc= glGetAttribLocaltion(vprog, s);
+
+if (loc == -1){
+printf("Vertex array not found : %s \n", s)
+}
+
+
+CAMLreturn (Val_int(loc));
+}
+
+
+CAMLprim void rglEnableVertexAttribArray(value id){
+CAMLparam1(id);
+GLuint loc = Int_val(id);
+glEnableVertexAttribArray(loc);
+return;
+}
+
+CAMLprim void rglDisableVertexAttribArray(value id){
+CAMLparam1(id);
+GLuint loc = Int_val(id);
+glDisableVertexAttribArray(loc);
+return;
+}
+
+
+CAMLprim void rglVertexAttribPointer(value index, value size, value type, value normalized, value stride,value offset ){
+CAMLparam5(index,size,type,normalized,stride);
+CAMLparam1(offset);
+GLuint c_index = Int_val(id), c_size=Int_val(size), c_type= Int_val(type), c_norm=Int_val(normalized), c_stride=Int_val(stride); c_offset=Int_val(offset) ;
+VertexAttribPointer(c_index,c_size,c_type, c_norm, c_stride, 0 )
+return;
+}
+
+
+/****
+Buffer
+******/
+
+CAMLprim value rglGenBuffer(value nil){
+CAMLparam1(nil);
+GLuint id=0;
+glGenBuffers(1, &id);
+CAMLreturn(Val_int(id));
+}
+
+
+CAMLprim value rglBindBuffer(value type, value id){
+CAMLparam2(type,id);
+GLuint c_id=Int_val(id);
+GLUint c_type=Int_val(type)
+glBindBuffer(c_type,c_id);
+return ();
+}
+
+CAMLprim value rglUnbindBuffer(value type){
+CAMLparam1(type);
+GLUint c_type=Int_val(type)
+glUnbindBuffer(c_type);
+return ();
+}
+
+
+
+
 /*****
 Texture
 ******/
@@ -152,6 +228,7 @@ CAMLreturn(Val_int(id));
 }
 
 CAMLprim void rglBindTexture(value type, value id){
+CAMLparam2(type,id);
 GLuint cid= Int_val(id);
 GLuint ctype = Int_val(type);
 glBindTexture(ctype,cid);
@@ -167,6 +244,7 @@ GLuint cval = Int_val(val);
 glTexParameteri(ctype,cparameter,cval);
 return;
 }
+
 
 
 
