@@ -19,19 +19,19 @@ external uniform1f : int -> float -> unit = "rglUniform1f"
 external uniform3f : int -> float -> float -> float-> unit = "rglUniform3f"
 
 (*Vertex Array *)
-external getAttribLocation : int -> string->int "rglGetAttribLocation"
-external enableVertexAttribArray : int -> unit "rglEnableVertexAttribArray"
-external disableVertexAttribArray : int -> unit "rglDisableVertexAttribArray"
-external vertexAttribPointer : int -> int -> int ->int -> int-> int->unit "rglVertexAttribPointer"
+external getAttribLocation : int -> string->int="rglGetAttribLocation"
+external enableVertexAttribArray : int -> unit="rglEnableVertexAttribArray"
+external disableVertexAttribArray : int -> unit="rglDisableVertexAttribArray"
+external vertexAttribPointer : int -> int -> int ->int -> int-> int->unit="rglVertexAttribPointer_interp" "rglVertexAttribPointer"
 
 (* Buffer *)
 
 external genBuffer : unit -> int = "rglGenBuffer"
 external bindBuffer : int -> int -> unit = "rglBindBuffer"
 external unbindBuffer : int -> unit = "rglUnbindBuffer"
-external bufferData : int -> int -> ('a,'b,Bigarray.c_layout) Bigarray.Array2.t ->int-> unit
-external mapBufferRange : int -> int -> int -> int -> ('a,'b,Bigarray.c_layout) Bigarray.Array2.t 
-external unmapBuffer : unit -> unit
+external bufferData : int -> int -> ('a,'b,Bigarray.c_layout) Bigarray.Array2.t ->int-> unit = "rglBufferData"
+external mapBufferRange : int -> int -> int -> int -> ('a,'b,Bigarray.c_layout) Bigarray.Array2.t = "rglMapBufferRange"
+external unmapBuffer : unit -> unit = "rglUnmapBuffer"
 
 (* texture *)
 external genTexture : unit -> int  = "rglGenTexture"
