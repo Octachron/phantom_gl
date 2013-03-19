@@ -3,6 +3,7 @@
 
 #include <caml/memory.h>
 #include <caml/mlvalues.h>
+#include <caml/bigarray.h>
 #include <stdio.h>
 
 CAMLprim value rglGlewInit(value unit){
@@ -212,6 +213,45 @@ return ;
 }
 
 
+unsigned int sizes[10]= {sizeof(float), sizeof(double), sizeof(char), sizeof(char), 0,0,sizeof(int), sizeof(long), sizeof(int), sizeof(int) } ;
+
+
+
+
+CAMLprim void rglBufferData(value targetType, value array, value usage ){
+//CAMLparam3(targetType, array, usage );
+GLenum c_target= Int_val(targetType);
+GLenum c_use=Int_val(usage);
+struct caml_ba_array* uarr= Bigarray_val(array);
+int type = uarr->flags | BIGARRAY_KIND_MASK;
+intnat* dims = uarr->dim;
+void* data= uarr-> data;
+
+glBufferData(c_target, dims[0]*dims[1]*sizes[type],data,c_use);
+return;
+}
+
+CAMLprim value rglMapBuffer(value target,value access, value type, value xdim, value ydim){
+CAMLparam5(target,access,type, xdim, ydim);
+GLenum c_target=Int_val(target);
+GLenum c_access = Int_val(access);
+
+unsigned int c_xdim=Int_val(xdim), c_ydim=Int_val(ydim);
+unsigned int c_type= Int_val(type);
+
+void* p = glMapBuffer(c_target, c_access);
+intnat dims[2]={c_xdim,c_ydim};
+value V=alloc_bigarray( c_type | BIGARRAY_C_LAYOUT, 2,p, dims);
+CAMLreturn(V);  
+}
+
+
+CAMLprim void rglUnmapBuffer(value target){
+CAMLparam1(target);
+GLenum c_target=Int_val(target);
+glUnmapBuffer(c_target);
+return;
+}
 
 
 /*****

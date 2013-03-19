@@ -29,9 +29,9 @@ external vertexAttribPointer : int -> int -> int ->int -> int-> int->unit="rglVe
 external genBuffer : unit -> int = "rglGenBuffer"
 external bindBuffer : int -> int -> unit = "rglBindBuffer"
 external unbindBuffer : int -> unit = "rglUnbindBuffer"
-external bufferData : int -> int -> ('a,'b,Bigarray.c_layout) Bigarray.Array2.t ->int-> unit = "rglBufferData"
-external mapBufferRange : int -> int -> int -> int -> ('a,'b,Bigarray.c_layout) Bigarray.Array2.t = "rglMapBufferRange"
-external unmapBuffer : unit -> unit = "rglUnmapBuffer"
+external bufferData : int -> ('a,'b,Bigarray.c_layout) Bigarray.Array2.t ->int-> unit = "rglBufferData"
+external mapBuffer : int -> int -> int -> int -> int -> ('a,'b,Bigarray.c_layout) Bigarray.Array2.t = "rglMapBuffer"
+external unmapBuffer : int -> unit = "rglUnmapBuffer"
 
 (* texture *)
 external genTexture : unit -> int  = "rglGenTexture"

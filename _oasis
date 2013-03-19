@@ -15,3 +15,8 @@ Executable  Wyrd
   CClib: -lGL -lGLEW
   CompiledObject: native
   
+Executable glBind
+  Path:
+  BuildTools: ocamlbuild
+  MainIs: glBind.ml
+  CompiledObject: native  
