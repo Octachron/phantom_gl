@@ -2,7 +2,7 @@ open FunOp;;
 
 	
 Sdl.init [`VIDEO];;
-Random.init 12;;
+Random.init 121;;
 
 let surface= Sdlvideo.set_video_mode ~w:500 ~h:500 ~bpp:0 [`OPENGL; `DOUBLEBUF];;
 
@@ -71,9 +71,23 @@ let lHeat=VertexArray.getLoc ~prog ~name:"heat";;
 VertexArray.withBuffer ~loc:lGrid bGrid;;
 VertexArray.withBuffer ~loc:lHeat bHeat;;
 
+let diffusion dt =
+	let pos i j=i*size + j in
+	let laplace pos=  4.*.heat.{pos,0} -. heat.{pos+1,0} -. heat.{pos-1,0} -.  heat.{pos+size,0} -. heat.{pos - size,0} in
+	let evolve a= for i=1 to size-2 do (
+			 for j=1 to (size-2) do (
+				let pos=pos i j in
+				 a.{pos,0} <- heat.{pos,0}  -. dt*. (laplace pos)
+			 ) done 
+		) done 
+	and copy a i j = let pos = pos i j in heat.{pos,0}<- a.{pos,0} in
+	let aux a=
+	 	evolve a; gridIter size size (copy a) in
+	BufferGl.update bHeat aux
+		
+let dt=0.01
 
-
-let rec loop () = Rgl.clear 0x00004000;  Draw.elementsWith ~buf:bIndex ~primitives:0x0007 ~start:0 ~len:(BufferGl.size bIndex) ; Sdlgl.swap_buffers();
+let rec loop () = Rgl.clear 0x00004000; diffusion dt ;  Draw.elementsWith ~buf:bIndex ~primitives:0x0007 ~start:0 ~len:(BufferGl.size bIndex) ; Sdlgl.swap_buffers();
 	match Sdlevent.poll() with
 	    | Some Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE }
 	    | Some Sdlevent.QUIT -> ()

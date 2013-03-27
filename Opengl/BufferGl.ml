@@ -20,8 +20,8 @@ let map access b=
 bind b;
 let (xdim,ydim) =b.dims in
 let arr=Rgl.mapBuffer b.target access b.baType xdim ydim in
-unbind b; arr
+ arr
 
-let unmap b= Rgl.unmapBuffer b.target
+let unmap b= Rgl.unmapBuffer b.target; unbind b
 
 let update b ?access:(access=0x88BA) f= let a = map access b in f a ; unmap b 
