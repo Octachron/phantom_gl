@@ -15,3 +15,12 @@ Executable  Wyrd
   CClib: -lGL -lGLEW
   CompiledObject: native
   
+Executable  Laplace
+  Path:       .
+  BuildTools: ocamlbuild
+  MainIs:     Laplace.ml
+  BuildDepends: sdl
+  CSources: C/opengl_glue.c
+  CClib: -lGL -lGLEW
+  CompiledObject: native
+  

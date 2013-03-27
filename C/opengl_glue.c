@@ -16,6 +16,8 @@ unsigned long sizes[10]= {sizeof(float), sizeof(double), sizeof(char), sizeof(ch
 
 unsigned int gltypes[10]= {GL_FLOAT, GL_DOUBLE,GL_BYTE,GL_UNSIGNED_BYTE,GL_SHORT,GL_UNSIGNED_SHORT, GL_INT,GL_INT, GL_INT, GL_INT } ;
 
+unsigned int glutypes[10]= {GL_FLOAT, GL_DOUBLE,GL_BYTE,GL_UNSIGNED_BYTE,GL_UNSIGNED_SHORT,GL_UNSIGNED_SHORT, GL_UNSIGNED_INT,GL_UNSIGNED_INT, GL_UNSIGNED_INT, GL_UNSIGNED_INT } ;
+
 
 
 /****
@@ -239,7 +241,7 @@ return;
 
 CAMLprim void rglDrawElements(value primitive,value type, value start, value len ){
 GLint c_prim=Int_val(primitive), o_type=Int_val(type), c_start=Int_val(start), c_len=Int_val(len);
-int c_type=gltypes[o_type];
+int c_type=glutypes[o_type];
 size_t off=c_start*sizes[o_type];
 
 //printf("Draw Elements ::  primitive:%d (%d), type:%d(%d), offset:%ld, len:%d \n", c_prim,GL_TRIANGLES,c_type,GL_INT,off,c_len);

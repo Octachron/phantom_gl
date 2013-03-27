@@ -1,6 +1,7 @@
 open Bigarray
 type ('a,'b) t= {target:int; id : int; dims : int * int; baType : int}
 
+let size b= let m, n = b.dims in m*n
 let dims b=b.dims
 let baType b=b.baType 
 

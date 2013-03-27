@@ -3,6 +3,7 @@ type ('a,'b) t
 
 val baType : ('a,'b) t -> int
 val dims : ('a,'b) t -> int*int
+val size : ('a,'b) t -> int
 
 val bind : ('a,'b) t -> unit
 val unbind : ('a,'b) t -> unit
