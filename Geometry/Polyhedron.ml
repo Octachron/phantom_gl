@@ -14,6 +14,22 @@ let open Vec3 in
 	{normal= -1.*vt; pos=s}, [vx;vy;vz]
 ]
 
+let cube = 
+	let open Vec3.in
+	let z=zero in
+	let vx= { z with x=1. }
+ 	and vy= {z with y=1. }  
+ 	and vz= {z with z=1. } in
+[
+	{normal = -1.*vz; pos=0}, [z, vx ,vx+vy , vy ];
+	{normal = -1.*vy; pos=0}, [z, vx ,vx+vz , vz ];
+	{normal = -1.*vx; pos=0}, [z, vy ,vy+vz , vz ];
+	{normal =  vx; pos=1}, [vx, vx+vz ,vx+vz+vy , vx+vy ];
+	{normal =  vz; pos=1}, [vy, vy+vz ,vy+vz+vx , vy+vx ];
+	{normal =  vy; pos=1}, [vz, vz+vx ,vz+vx+vy , vz+vy ];
+]
+ 	
+
 let map f= List.map (fun (h,p) -> (h,Polygone.map f p) ) 
 
 let intersection h ph=

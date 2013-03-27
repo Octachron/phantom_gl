@@ -62,8 +62,8 @@ let intersection h p=
                           else (
                             contract t (commit current ll) (a,(if t then [a] else []),a) q )
 		| [] -> commit current ll in
-	let ( => ) d e=segint h d e in
-	let fusion fp lp fn ln mid=let l,r = ln => fp, lp => fn  in
+	let ( <=> ) d e=segint h d e in
+	let fusion fp lp fn ln mid=let l,r = ln <=> fp, lp <=> fn  in
                                    Seg {l;r},l::(mid@[r])
         in
 	match p with
@@ -76,7 +76,7 @@ let intersection h p=
 	| [fn,[],ln; fp, mid, lp] -> fusion fp lp fn ln mid
  	| [fp,mid,lp; fn, [] , ln] -> fusion fp lp fn ln mid
         | [_, [] , ln; fp, mid, lp; fn, [], _ ] -> fusion fp lp fn ln mid
-	| [ _, mid1 , lp; fn, [], ln; fp, mid2, _ ] -> let l,r= lp => fn, ln => fp in
+	| [ _, mid1 , lp; fn, [], ln; fp, mid2, _ ] -> let l,r= lp <=> fn, ln <=> fp in
 	                                                   Seg {l;r},mid1@(l::r::mid2)
 	| _ -> Nil, []
 

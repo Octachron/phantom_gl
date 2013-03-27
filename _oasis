@@ -10,13 +10,8 @@ Executable  Wyrd
   Path:       .
   BuildTools: ocamlbuild
   MainIs:     Wyrd.ml
-  BuildDepends: sdl,lablGL
+  BuildDepends: sdl
   CSources: C/opengl_glue.c
   CClib: -lGL -lGLEW
   CompiledObject: native
   
-Executable glBind
-  Path:
-  BuildTools: ocamlbuild
-  MainIs: glBind.ml
-  CompiledObject: native  

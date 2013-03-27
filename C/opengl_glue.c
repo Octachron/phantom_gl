@@ -6,11 +6,40 @@
 #include <caml/bigarray.h>
 #include <stdio.h>
 
+
+
+/***
+Translation tables
+***/
+
+unsigned long sizes[10]= {sizeof(float), sizeof(double), sizeof(char), sizeof(char), sizeof(short),sizeof(unsigned short),sizeof(int), sizeof(long), sizeof(int), sizeof(int) } ;
+
+unsigned int gltypes[10]= {GL_FLOAT, GL_DOUBLE,GL_BYTE,GL_UNSIGNED_BYTE,GL_SHORT,GL_UNSIGNED_SHORT, GL_INT,GL_INT, GL_INT, GL_INT } ;
+
+
+
+/****
+Init
+****/
+
 CAMLprim value rglGlewInit(value unit){
 CAMLparam1(unit);
 glewInit();
 CAMLreturn(Val_unit);
 }
+
+/***
+Basic
+***/
+CAMLprim void rglClear(value w){
+int cw=Int_val(w);
+glClear(cw);
+return;
+}
+
+/***
+Shader functions
+****/
 
 CAMLprim value rglShaderCreate(value type){
 CAMLparam1(type);
@@ -179,15 +208,53 @@ return;
 CAMLprim void rglVertexAttribPointer(value index, value size, value type, value normalized, value stride,value offset ){
 //CAMLparam5(index,size,type,normalized,stride);
 //CAMLxparam1(offset);
-GLuint c_index = Int_val(index), c_size=Int_val(size), c_type= Int_val(type), c_norm=Int_val(normalized), c_stride=Int_val(stride), c_offset=Int_val(offset) ;
-glVertexAttribPointer(c_index,c_size,c_type, c_norm, c_stride, NULL+c_offset );
+
+//printf("VertexAttribPointer\n");
+
+GLuint c_index = Int_val(index), c_size=Int_val(size), o_type= Int_val(type), c_norm=Int_val(normalized), c_stride=Int_val(stride);
+
+long c_offset=  Int_val(offset) ;
+
+GLint c_type= gltypes[o_type]; 
+//printf("loc=%d, size=%d, type=%d (%d), norm=%d, stride=%d, c_offset=%ld \n", c_index,c_size,c_type,GL_FLOAT, c_norm, c_stride,c_offset);
+glVertexAttribPointer(c_index,c_size,c_type, c_norm, c_stride,  (void*) c_offset );
 return;
 }
+
+CAMLprim void rglVertexAttribPointer_interp(int nargs, value* args){
+rglVertexAttribPointer(args[0],args[1],args[2],args[3],args[4],args[5]);
+}
+
+
+/***
+Draw
+****/
+
+CAMLprim void rglDrawArrays(value primitive, value start, value len ){
+GLint c_prim=Int_val(primitive), c_start=Int_val(start), c_len=Int_val(len);
+glDrawArrays(c_prim,c_start,c_len);
+return; 
+}
+
+
+CAMLprim void rglDrawElements(value primitive,value type, value start, value len ){
+GLint c_prim=Int_val(primitive), o_type=Int_val(type), c_start=Int_val(start), c_len=Int_val(len);
+int c_type=gltypes[o_type];
+size_t off=c_start*sizes[o_type];
+
+//printf("Draw Elements ::  primitive:%d (%d), type:%d(%d), offset:%ld, len:%d \n", c_prim,GL_TRIANGLES,c_type,GL_INT,off,c_len);
+
+glDrawElements(c_prim,c_len, c_type,(void*) (off) );
+return; 
+}
+
 
 
 /****
 Buffer
 ******/
+
+
 
 CAMLprim value rglGenBuffer(value nil){
 CAMLparam1(nil);
@@ -213,9 +280,19 @@ return ;
 }
 
 
-unsigned int sizes[10]= {sizeof(float), sizeof(double), sizeof(char), sizeof(char), 0,0,sizeof(int), sizeof(long), sizeof(int), sizeof(int) } ;
 
 
+
+
+
+CAMLprim value rglBaType(value array){
+CAMLparam1(array);
+int ctype = Bigarray_val(array)->flags & BIGARRAY_KIND_MASK;
+//printf("ctype=%d \n",ctype);
+//ctype= gltypes[ctype];
+value otype=Val_int(ctype);
+CAMLreturn(otype);
+}
 
 
 CAMLprim void rglBufferData(value targetType, value array, value usage ){
@@ -223,9 +300,11 @@ CAMLprim void rglBufferData(value targetType, value array, value usage ){
 GLenum c_target= Int_val(targetType);
 GLenum c_use=Int_val(usage);
 struct caml_ba_array* uarr= Bigarray_val(array);
-int type = uarr->flags | BIGARRAY_KIND_MASK;
+int type = uarr->flags & BIGARRAY_KIND_MASK;
 intnat* dims = uarr->dim;
 void* data= uarr-> data;
+
+printf( "Buffer Data :: type=%d, target=%d (%d), size=%ld, use=%d (%d) \n", type, c_target,GL_ARRAY_BUFFER, dims[0]*dims[1]*sizes[type], c_use, GL_STREAM_DRAW);
 
 glBufferData(c_target, dims[0]*dims[1]*sizes[type],data,c_use);
 return;
@@ -247,7 +326,7 @@ CAMLreturn(V);
 
 
 CAMLprim void rglUnmapBuffer(value target){
-CAMLparam1(target);
+//CAMLparam1(target);
 GLenum c_target=Int_val(target);
 glUnmapBuffer(c_target);
 return;

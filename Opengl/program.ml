@@ -1,4 +1,4 @@
-type program =int
+type t =int
  
 let uid p= p
 

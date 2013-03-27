@@ -38,8 +38,10 @@ type hyperplane = {normal : V.vect ; pos : float }
 let hyperplane v p={normal=v; pos=p}
 
 let (||) h v= V. ( h.normal *: v)  +. h.pos
+let (|*) s h = {h with pos = s*. h.pos}  
 
-let print h=
+
+let printH h=
 let v=h.normal in
 V.print v; Printf.printf ":%f" h.pos
 

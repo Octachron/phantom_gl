@@ -1,75 +1,66 @@
-open FunOp
+open FunOp;;
 
 	
+Sdl.init [`VIDEO];;
+let surface= Sdlvideo.set_video_mode ~w:500 ~h:500 ~bpp:0 [`OPENGL; `DOUBLEBUF];;
 
-let glVert v= let open Vec3 in GlDraw.vertex3 (v.x,v.y,v.z)
-
-let display p =
-  let ts= Polygone.triangles p in
-  let cts = List.fold_left ( @ ) [] ts in
-    List.iter glVert cts
- 
+Rgl.glewInit();;
 
 
-let colorize n= 
-let nf = float_of_int n in
-let f s =(1. +.  cos( nf/.s) )/.2. in
-let c = f 2. , f 5., f 12. in
-GlDraw.color c
 
-let displayH h= 
-	 GlClear.clear [`color;`depth];
-         GlDraw.begins `triangles;
-	 ignore ( List.fold_left (fun n (h,p) -> colorize n ; display p; n+1) 2 h); 
-	 GlDraw.ends ();
-	 Sdlgl.swap_buffers()
-	         
+
+let vecToArray a i v = Vec3.( a.{i,0} <- v.x; a.{i,1} <- v.y; a.{i,2} <- v.z )
+let vecListToArray a = ignore <> ( List.fold_left (fun i v -> (vecToArray a i v; i+1) ) 0  )
+
+let arrayfromVec3 l =
+ let n = List.length l in
+ let a=Bigarray.Array2.create Bigarray.float32 Bigarray.c_layout n 3 in
+vecListToArray a l; a
+
+let vertex = 
+ let open Vec3 in let
+ z=Vec3.zero in 
+ arrayfromVec3 Vec3.( [z; {z with x=1.}; {z with y=1.} ] )
 	
 
-let cube =let hv v= Vec3.hyperplane v 0.25 in
- let z=Vec3.zero in
- let vl= Vec3.( [{z with x= -1.} ; {z with y= -1.}; {z with z= -1.}  ] )
- and th= Polyhedron.tetrahedron 1. in
-  List.fold_left (fun ph v -> Polyhedron.intersection (hv v) ph) th vl
+let colors=Bigarray.Array2.of_array Bigarray.float32 Bigarray.c_layout
+	[| [|1.;0.;0.;1.|]; [|0.;1.;0.;1.|]; [|0.;0.;1.;1.|]  |]
 
 
-let rotation  = Vec3.(create 1. 1. 0. |> normalized |> rotation )
-let trans t = Vec3.((+) (t* (create 1. 0. 0.)))
-let vect t= Vec3.({x=cos (1.117*.t); y=sin t; z=4.+.cos (2.14*.t)}) 
+let index=Bigarray.Array2.of_array Bigarray.int16_unsigned Bigarray.c_layout
+	  [| [|0|] ;[|1|] ; [|2|]  |] 
 
-let upos t uni = Uniform.( uni =$ (cos (7.111*.t), vect t)  )
-  	
+let srv=Utils.load "shaders/simple.vert"
+let srf=Utils.load "shaders/simple.frag"
 
-let rec loop state t =
- let state=upos t state  in
-    match Sdlevent.poll() with
-    | Some Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE }
-    | Some Sdlevent.QUIT -> ()
-    | _ ->  displayH (Polyhedron.map (rotation t) cube); loop state (t+.0.1) ;;
+let vert= Shader.compileVertFrom srv
+let frag= Shader.compileFragFrom srf
 
+let prog=Program.create vert frag;;
+Program.use prog;;
 
-  Sdl.init [`VIDEO];;
-  let surface= Sdlvideo.set_video_mode ~w:500 ~h:500 ~bpp:0 [`OPENGL; `DOUBLEBUF] ;;
-  Rgl.glewInit();;
-  Gl.enable `depth_test;;
+let bufferPos=BufferGl.create 0x8892 vertex 0x88E0
+let bCol=BufferGl.create 0x8892 colors 0x88E0
 
-  let t=Texture.create (256,256) 
-  and t2=Texture.create (256,256) in
-Printf.printf "Texture id : %u \n" Texture.(t2.uid);;
-
-  let srcV=Utils.load "shaders/test.vert" and srcF = Utils.load "shaders/test.frag" 
- 
-  let vert= Shader.compileVertFrom srcV and  frag = Shader.compileFragFrom srcF 
-  let print x= Printf.printf "Shader id %d \n" (Shader.uid x);;
-
-   print vert; print frag;;
-
-  let prog=Program.create vert frag
-  let mist=Uniform.scalar prog "mist" 0.  
-  let pos=Uniform.vector prog "pos" Vec3.zero;;
-
-  loop (Uniform.join mist pos) 0.;
-  Sdl.quit()
+let bIndex=BufferGl.create 0x8893 index 0x88E0
 
 
-	
+
+let posLoc=VertexArray.getLoc ~prog ~name:"pos";;
+let colLoc=VertexArray.getLoc ~prog ~name:"color";;
+
+VertexArray.withBuffer ~loc:posLoc bufferPos;;
+VertexArray.withBuffer ~loc:colLoc bCol;;
+
+BufferGl.update bCol (fun a -> a.{0,1}<- 1. );;
+
+let rec loop () = Rgl.clear 0x00004000;  Draw.elementsWith ~buf:bIndex ~primitives:0x0004 ~start:0 ~len:3 ; Sdlgl.swap_buffers();
+	match Sdlevent.poll() with
+	    | Some Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE }
+	    | Some Sdlevent.QUIT -> ()
+	    | _ ->  loop();;
+
+loop();
+Sdl.quit();;
+
+

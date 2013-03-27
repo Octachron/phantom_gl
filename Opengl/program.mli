@@ -1,10 +1,10 @@
-type program
-val uid : program -> int
+type t
+val uid : t -> int
 
-val genUid : unit -> program 
-val attach : program -> vert:[`Vertex] Shader.t -> frag:[`Fragment] Shader.t -> unit
-val link : program -> unit
+val genUid : unit -> t 
+val attach : t -> vert:[`Vertex] Shader.t -> frag:[`Fragment] Shader.t -> unit
+val link : t -> unit
 
-val use : program -> unit
+val use : t -> unit
 
-val create : vert:[`Vertex] Shader.t -> frag:[`Fragment] Shader.t -> program
+val create : vert:[`Vertex] Shader.t -> frag:[`Fragment] Shader.t -> t

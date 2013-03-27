@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 3fd7412bc20f4a1064bb80c4339091ab)
+# DO NOT EDIT (digest: 595c744f19ba4b8e4438e6a738a457e5)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -21,10 +21,7 @@
 "dllWyrd_stubs.so": oasis_executable_wyrd_cclib
 "Wyrd.native": use_libWyrd_stubs
 "Wyrd.native": pkg_sdl
-"Wyrd.native": pkg_lablGL
 <*.ml{,i}>: pkg_sdl
-<*.ml{,i}>: pkg_lablGL
 "C/opengl_glue.c": pkg_sdl
-"C/opengl_glue.c": pkg_lablGL
 # OASIS_STOP
 <General> or <Geometry> or <Opengl> : include

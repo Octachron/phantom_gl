@@ -1,34 +1,47 @@
-
+(* Init *)
 external glewInit : unit -> unit ="rglGlewInit" 
+
+(* Basic *)
+external clear : int -> unit = "rglClear"
+
+
+(* Shader *)
 external shaderCreate : int -> int = "rglShaderCreate" 
-
 external shaderLoad : int-> string -> unit = "rglShaderLoad"
-
 external shaderCompile : int -> unit = "rglShaderCompile"
 external shaderDelete : int -> unit = "rglShaderDelete"
 
+(* Program*)
 external programCreate : unit -> int ="rglProgramCreate"
 external programAttach : int -> int -> unit = "rglProgramAttach"
 external programLink : int -> unit = "rglProgramLink"
 external programUse : int -> unit = "rglProgramUse"
 external programDelete : int -> unit = "rglProgramDelete"
 
+(* Uniforms *)
 external getUniformLocation : int -> string -> int  = "rglGetUniformLocation"
 
 external uniform1f : int -> float -> unit = "rglUniform1f"
 external uniform3f : int -> float -> float -> float-> unit = "rglUniform3f"
 
+(* Draw*)
+
+external drawArrays : int -> int -> int -> unit = "rglDrawArrays"
+external drawElements : int -> int-> int -> int -> unit = "rglDrawElements"
+
 (*Vertex Array *)
 external getAttribLocation : int -> string->int="rglGetAttribLocation"
 external enableVertexAttribArray : int -> unit="rglEnableVertexAttribArray"
 external disableVertexAttribArray : int -> unit="rglDisableVertexAttribArray"
-external vertexAttribPointer : int -> int -> int ->int -> int-> int->unit="rglVertexAttribPointer_interp" "rglVertexAttribPointer"
+external vertexAttribPointer : int -> int -> int ->bool -> int-> int->unit="rglVertexAttribPointer_interp" "rglVertexAttribPointer"
 
 (* Buffer *)
 
 external genBuffer : unit -> int = "rglGenBuffer"
 external bindBuffer : int -> int -> unit = "rglBindBuffer"
 external unbindBuffer : int -> unit = "rglUnbindBuffer"
+
+external baType : ('a,'b,'c) Bigarray.Array2.t -> int = "rglBaType"
 external bufferData : int -> ('a,'b,Bigarray.c_layout) Bigarray.Array2.t ->int-> unit = "rglBufferData"
 external mapBuffer : int -> int -> int -> int -> int -> ('a,'b,Bigarray.c_layout) Bigarray.Array2.t = "rglMapBuffer"
 external unmapBuffer : int -> unit = "rglUnmapBuffer"
