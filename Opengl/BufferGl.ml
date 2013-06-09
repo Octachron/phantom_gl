@@ -10,9 +10,9 @@ let unbind b= Rgl.unbindBuffer b.target
 
 let create target data usage=
 	let id=Rgl.genBuffer() in
-        let b= {target;id; dims= (Array2.dim1 data, Array2.dim2 data) ; baType=Rgl.baType data } in
+        let b= { target=GlEnum.raw target;id; dims= (Array2.dim1 data, Array2.dim2 data) ; baType=Rgl.baType data } in
 	bind b;
-	Rgl.bufferData b.target data usage;
+	Rgl.bufferData b.target data  (GlEnum.raw usage);
 	unbind b; b
 
 
@@ -24,4 +24,4 @@ let arr=Rgl.mapBuffer b.target access b.baType xdim ydim in
 
 let unmap b= Rgl.unmapBuffer b.target; unbind b
 
-let update b ?access:(access=0x88BA) f= let a = map access b in f a ; unmap b 
+let update b ?access:(access=GlEnum.rw) f= let a = map (GlEnum.raw access) b in f a ; unmap b 

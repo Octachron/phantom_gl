@@ -39,10 +39,10 @@ let frag= Shader.compileFragFrom srf
 let prog=Program.create vert frag;;
 Program.use prog;;
 
-let bufferPos=BufferGl.create 0x8892 vertex 0x88E0
-let bCol=BufferGl.create 0x8892 colors 0x88E0
+let bufferPos=BufferGl.create GlEnum.array vertex GlEnum.stream_draw
+let bCol=BufferGl.create GlEnum.array colors GlEnum.stream_draw
 
-let bIndex=BufferGl.create 0x8893 index 0x88E0
+let bIndex=BufferGl.create GlEnum.element index GlEnum.stream_draw
 
 
 
@@ -54,7 +54,7 @@ VertexArray.withBuffer ~loc:colLoc bCol;;
 
 BufferGl.update bCol (fun a -> a.{0,1}<- 1. );;
 
-let rec loop () = Rgl.clear 0x00004000;  Draw.elementsWith ~buf:bIndex ~primitives:0x0004 ~start:0 ~len:3 ; Sdlgl.swap_buffers();
+let rec loop () = Draw.clear GlEnum.color;  Draw.elementsWith ~buf:bIndex ~primitives:GlEnum.triangles ~start:0 ~len:3 ; Sdlgl.swap_buffers();
 	match Sdlevent.poll() with
 	    | Some Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE }
 	    | Some Sdlevent.QUIT -> ()

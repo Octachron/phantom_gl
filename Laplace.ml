@@ -58,10 +58,10 @@ let frag= Shader.compileFragFrom srf
 let prog=Program.create vert frag;;
 Program.use prog;;
 
-let bGrid=BufferGl.create 0x8892 vertex 0x88E0
-let bHeat=BufferGl.create 0x8892 heat 0x88E0
+let bGrid=BufferGl.create GlEnum.array vertex GlEnum.stream_draw
+let bHeat=BufferGl.create GlEnum.array heat GlEnum.stream_draw
 
-let bIndex=BufferGl.create 0x8893 index 0x88E0
+let bIndex=BufferGl.create GlEnum.element index GlEnum.stream_draw
 
 
 
@@ -87,7 +87,7 @@ let diffusion dt =
 		
 let dt=0.01
 
-let rec loop () = Rgl.clear 0x00004000; diffusion dt ;  Draw.elementsWith ~buf:bIndex ~primitives:0x0007 ~start:0 ~len:(BufferGl.size bIndex) ; Sdlgl.swap_buffers();
+let rec loop () = Draw.clear GlEnum.(color++depth); diffusion dt ;  Draw.elementsWith ~buf:bIndex ~primitives:GlEnum.quads ~start:0 ~len:(BufferGl.size bIndex) ; Sdlgl.swap_buffers();
 	match Sdlevent.poll() with
 	    | Some Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE }
 	    | Some Sdlevent.QUIT -> ()
