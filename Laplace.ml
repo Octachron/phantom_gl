@@ -87,6 +87,7 @@ let diffusion dt =
 		
 let dt=0.01
 
+
 let rec loop () = Draw.clear GlEnum.(color++depth); diffusion dt ;  Draw.elementsWith ~buf:bIndex ~primitives:GlEnum.quads ~start:0 ~len:(BufferGl.size bIndex) ; Sdlgl.swap_buffers();
 	match Sdlevent.poll() with
 	    | Some Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE }

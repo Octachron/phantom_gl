@@ -4,45 +4,45 @@ type 'a t
 val raw : 'a t -> int 
 
 
-val byte : [`DataType] t
+val byte : < kind: [`BufferType] > t
 
-val array : [`BufferType] t
-val element : [`BufferType] t
-
-
-val stream_draw : [`BufferUseType] t 
-val stream_read : [`BufferUseType] t 
-val stream_copy : [`BufferUseType] t 
-
-val static_draw : [`BufferUseType] t 
-val static_read : [`BufferUseType] t 
-val static_copy : [`BufferUseType] t 
-
-val dynamic_draw : [`BufferUseType] t
-val dynamic_read : [`BufferUseType] t 
-val dynamic_copy : [`BufferUseType] t
+val array : <kind: [`BufferType]> t
+val element : <kind: [`BufferType]>  t
 
 
-val depth :  [` BufferBit | `Fusion] t
-val stencil :  [` BufferBit | `Fusion] t
-val color :  [` BufferBit | `Fusion] t
+val stream_draw : <kind: [`BufferUseType]>  t 
+val stream_read : <kind: [`BufferUseType]>  t 
+val stream_copy : <kind: [`BufferUseType]>  t 
 
-val _true : [`Bool] t
-val _false : [`Bool] t
+val static_draw : <kind: [`BufferUseType]>  t 
+val static_read : <kind: [`BufferUseType]>  t 
+val static_copy : <kind: [`BufferUseType]>  t 
 
-val points : [`Primitives] t
-val lines : [`Primitives] t
-val lines_loop : [`Primitives] t
-val lines_strip : [`Primitives] t
-val triangles : [`Primitives] t
-val triangles_loop : [`Primitives] t
-val triangles_strip : [`Primitives] t
-val quads : [`Primitives] t
-
-val read : [`Access] t 
-val write  : [`Access] t 
-val rw   : [`Access] t 
+val dynamic_draw : <kind: [`BufferUseType]>  t
+val dynamic_read : <kind: [`BufferUseType]>  t 
+val dynamic_copy : <kind: [`BufferUseType]>  t
 
 
+val depth :  <kind: [`BufferBit]; fusion : [`True]>  t
+val stencil :  <kind: [`BufferBit]; fusion : [`True]>  t
+val color :  <kind: [`BufferBit]; fusion : [`True]>  t
 
-val ( ++ ) : [> `Fusion] t -> [> `Fusion] t ->  [> `Fusion] t 
+val _true :  <kind: [`Bool]>  t
+val _false : <kind: [`Bool]> t
+
+val points : <kind: [`Primitives]>  t
+val lines : <kind: [`Primitives]> t
+val lines_loop : <kind: [`Primitives]> t
+val lines_strip : <kind: [`Primitives]> t
+val triangles : <kind: [`Primitives]> t
+val triangles_loop : <kind: [`Primitives]> t
+val triangles_strip : <kind: [`Primitives]> t
+val quads : <kind: [`Primitives]> t
+
+val read : <kind:[`Access]> t 
+val write  : <kind:[`Access]> t 
+val rw   : <kind:[`Access]> t 
+
+
+
+val ( ++ ) : <fusion:[`True]; ..> t -> <fusion:[`True];..> t ->  <fusion:[`True]; ..> t 
