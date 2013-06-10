@@ -54,7 +54,7 @@ VertexArray.withBuffer ~loc:colLoc bCol;;
 
 BufferGl.update bCol (fun a -> a.{0,1}<- 1. );;
 
-let rec loop () = Draw.clear GlEnum.(color ++ depth);  Draw.elementsWith ~buf:bIndex ~primitives:GlEnum.triangles ~start:0 ~len:3 ; Sdlgl.swap_buffers();
+let rec loop () = Draw.clear GlEnum.(color++depth);  Draw.elementsWith ~buf:bIndex ~primitives:GlEnum.triangles ~start:0 ~len:3 ; Sdlgl.swap_buffers();
 	match Sdlevent.poll() with
 	    | Some Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE }
 	    | Some Sdlevent.QUIT -> ()

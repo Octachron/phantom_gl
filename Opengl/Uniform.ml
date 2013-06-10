@@ -24,8 +24,9 @@ let vsplit3 f v= Vec3.(f v.x v.y v.z)
 let vsplit2 f v=Vec2.(f v.x v.y)
 
 let scalar=create Rgl.uniform1f
+let vec2=create  ( vsplit2 <> Rgl.uniform2f ) 
 let vec3=create  ( vsplit3 <> Rgl.uniform3f )  
-let vec2=create  ( vsplit2 <> Rgl.uniform2f )  
+ 
 
 
 

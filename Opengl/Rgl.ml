@@ -3,7 +3,7 @@ external glewInit : unit -> unit ="rglGlewInit"
 
 (* Basic *)
 external clear : int -> unit = "rglClear"
-
+external enable : int -> unit = "rglEnable"
 
 (* Shader *)
 external shaderCreate : int -> int = "rglShaderCreate" 
@@ -22,7 +22,9 @@ external programDelete : int -> unit = "rglProgramDelete"
 external getUniformLocation : int -> string -> int  = "rglGetUniformLocation"
 
 external uniform1f : int -> float -> unit = "rglUniform1f"
+external uniform2f : int -> float -> float -> unit = "rglUniform2f"
 external uniform3f : int -> float -> float -> float-> unit = "rglUniform3f"
+
 
 (* Draw*)
 
@@ -48,7 +50,5 @@ external unmapBuffer : int -> unit = "rglUnmapBuffer"
 
 (* texture *)
 external genTexture : unit -> int  = "rglGenTexture"
-
 external bindTexture : int-> int -> unit  = "rglBindTexture"
-
 external texParameteri : int-> int->int -> unit  = "rglBindTexture"

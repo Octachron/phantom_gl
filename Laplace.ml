@@ -7,6 +7,7 @@ Random.init 121;;
 let surface= Sdlvideo.set_video_mode ~w:500 ~h:500 ~bpp:0 [`OPENGL; `DOUBLEBUF];;
 
 Rgl.glewInit();;
+Rgl.enable 0x0B71;;
 
 
 let arrayf=Bigarray.Array2.create Bigarray.float32 Bigarray.c_layout
@@ -71,16 +72,20 @@ let lHeat=VertexArray.getLoc ~prog ~name:"heat";;
 VertexArray.withBuffer ~loc:lGrid bGrid;;
 VertexArray.withBuffer ~loc:lHeat bHeat;;
 
+let theta=Uniform.scalar prog "theta" 0.
+
 let diffusion dt =
-	let pos i j=i*size + j in
-	let laplace pos=  4.*.heat.{pos,0} -. heat.{pos+1,0} -. heat.{pos-1,0} -.  heat.{pos+size,0} -. heat.{pos - size,0} in
-	let evolve a= for i=1 to size-2 do (
-			 for j=1 to (size-2) do (
-				let pos=pos i j in
-				 a.{pos,0} <- heat.{pos,0}  -. dt*. (laplace pos)
+	let clip i = if i<0 then i+size else ( if i>=size then i-size else i) in 
+	let pos i j= (clip i) *size + (clip j) in
+	let h i j= heat.{pos i j,0} in
+	let laplace i j=  4.*.(h i j)-.  h (i+1) j   -. h (i-1) j -.  h i (j+1) -. h i (j-1) in
+	let evolve a= for i=0 to size-1 do (
+			 for j=0 to (size-1) do (
+				let posC=pos i j in
+				 a.{posC,0} <- heat.{posC,0}  -. dt*. (laplace i j)
 			 ) done 
 		) done 
-	and copy a i j = let pos = pos i j in heat.{pos,0}<- a.{pos,0} in
+	and copy a i j = let posC = pos i j in heat.{posC,0}<- a.{posC,0} in
 	let aux a=
 	 	evolve a; gridIter size size (copy a) in
 	BufferGl.update bHeat aux
@@ -88,13 +93,14 @@ let diffusion dt =
 let dt=0.01
 
 
-let rec loop () = Draw.clear GlEnum.(color++depth); diffusion dt ;  Draw.elementsWith ~buf:bIndex ~primitives:GlEnum.quads ~start:0 ~len:(BufferGl.size bIndex) ; Sdlgl.swap_buffers();
+
+let rec loop theta = Draw.clear GlEnum.(color++depth); diffusion dt ;  Draw.elementsWith ~buf:bIndex ~primitives:GlEnum.quads ~start:0 ~len:(BufferGl.size bIndex) ; Sdlgl.swap_buffers();
 	match Sdlevent.poll() with
 	    | Some Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE }
 	    | Some Sdlevent.QUIT -> ()
-	    | _ ->  loop();;
+	    | _ ->  loop  Uniform.( theta =~ (+.) 0.01 );;
 
-loop();
+loop theta;
 Sdl.quit();;
 
 

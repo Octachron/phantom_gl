@@ -4,11 +4,11 @@ in float oHeat;
 
 
 float fluct(float rate, float val){
-	return (pow(cos(rate*val),2));
+	return mod(rate*val,1);
 }
 
 vec4 colorize(float h){
-	return vec4( fluct(1, h), fluct (22, h) , fluct(0.13,h) , 1) ; 
+	return vec4( fluct(3, h), fluct (1, h) , fluct(2.,h) , 1) ; 
 }
 
 void main(void)

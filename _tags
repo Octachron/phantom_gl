@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 4a5c6e004fb98d93ef97c25dfdb12e24)
+# DO NOT EDIT (digest: 27f3c57440283848901f5cd8f80740de)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -13,14 +13,14 @@
 ".git": not_hygienic
 "_darcs": -traverse
 "_darcs": not_hygienic
-# Executable Wyrd
-"Wyrd.native": oasis_executable_wyrd_cclib
-"libWyrd_stubs.lib": oasis_executable_wyrd_cclib
-"dllWyrd_stubs.dll": oasis_executable_wyrd_cclib
-"libWyrd_stubs.a": oasis_executable_wyrd_cclib
-"dllWyrd_stubs.so": oasis_executable_wyrd_cclib
-"Wyrd.native": use_libWyrd_stubs
-"Wyrd.native": pkg_sdl
+# Executable Triangle
+"Triangle.native": oasis_executable_triangle_cclib
+"libTriangle_stubs.lib": oasis_executable_triangle_cclib
+"dllTriangle_stubs.dll": oasis_executable_triangle_cclib
+"libTriangle_stubs.a": oasis_executable_triangle_cclib
+"dllTriangle_stubs.so": oasis_executable_triangle_cclib
+"Triangle.native": use_libTriangle_stubs
+"Triangle.native": pkg_sdl
 # Executable Laplace
 "Laplace.native": oasis_executable_laplace_cclib
 "libLaplace_stubs.lib": oasis_executable_laplace_cclib

@@ -6,10 +6,10 @@ Authors:     Ego
 License:     LGPL
 
 
-Executable  Wyrd
+Executable  Triangle
   Path:       .
   BuildTools: ocamlbuild
-  MainIs:     Wyrd.ml
+  MainIs:     Triangle.ml
   BuildDepends: sdl
   CSources: C/opengl_glue.c
   CClib: -lGL -lGLEW

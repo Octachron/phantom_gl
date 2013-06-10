@@ -39,6 +39,13 @@ glClear(cw);
 return;
 }
 
+
+CAMLprim void rglEnable(value w){
+int cw=Int_val(w);
+glClear(cw);
+return;
+}
+
 /***
 Shader functions
 ****/
@@ -162,6 +169,13 @@ CAMLprim value rglUniform1f(value mloc,value mx)
   glUniform1f(loc,x);
   CAMLreturn(Val_unit);
 }
+
+CAMLprim void rglUniform2f(value mloc, value mx, value my){
+	GLuint loc=Int_val(mloc);
+        float x=Double_val(mx),y=Double_val(my);
+	glUniform2f(loc,x,y);
+	return; 
+} 
 
 CAMLprim value rglUniform3f(value mloc, value mx, value my, value mz){
 	CAMLparam4(mloc,mx,my,mz);
