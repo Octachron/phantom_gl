@@ -1,5 +1,5 @@
 open FunOp;;
-
+open Bigarray;;
 	
 Sdl.init [`VIDEO];;
 Random.init 121;;
@@ -7,10 +7,10 @@ Random.init 121;;
 let surface= Sdlvideo.set_video_mode ~w:500 ~h:500 ~bpp:0 [`OPENGL; `DOUBLEBUF];;
 
 Rgl.glewInit();;
-Rgl.enable 0x0B71;;
+Draw.enable GlEnum.depth_test;;
 
 
-let arrayf=Bigarray.Array2.create Bigarray.float32 Bigarray.c_layout
+let arrayf=Array1.create float32 c_layout
 
 
 
@@ -20,15 +20,15 @@ let gridIter m n f = for i=0 to (m-1) do (for j=0 to (n-1) do (f i j) done ) don
 
 let grid size=
 	let norm i = (2.*. foi i/. foi (size-1)) -. 1. in
-	let a = arrayf (size*size) 2 in
-	let f i j= let pos =j+i*size in  a.{pos,0}<- norm i; a.{pos,1}<- norm j in
+	let a = arrayf (2*size*size) in
+	let f i j= let pos =2*(j+i*size) in  a.{pos}<- norm i; a.{pos+1}<- norm j in
 		gridIter size size f;
 		a
 
 
 let gridTess size=
-	let a=Bigarray.Array2.create Bigarray.int32 Bigarray.c_layout (4*(size-1)*(size-1)) 1 in
-	let (<= ) pos (i,j) = a.{pos,0} <- Int32.of_int (i*size+j) in
+	let a=Array1.create int32 c_layout (4*(size-1)*(size-1)) in
+	let (<= ) pos (i,j) = a.{pos} <- Int32.of_int (i*size+j) in
  	let indice i j= let pos =4*( j+i*(size-1) )  in
 			 pos    <= (i,j) ;
 			(pos+1) <= (i+1,j) ;
@@ -39,8 +39,8 @@ let gridTess size=
 	  a
 
 let gridHeat size=
-	let a=arrayf (size*size) 1 in
-	let heat i j= let pos=i*size+j in a.{pos,0}<- Random.float 1. in
+	let a=arrayf (size*size) in
+	let heat i j= let pos=i*size+j in a.{pos}<- Random.float 1. in
 	gridIter size size heat; a 
 
 
@@ -66,26 +66,29 @@ let bIndex=BufferGl.create GlEnum.element index GlEnum.stream_draw
 
 
 
-let lGrid=VertexArray.getLoc ~prog ~name:"pos";;
-let lHeat=VertexArray.getLoc ~prog ~name:"heat";;
+let lGrid=VertexArray.getLoc ~prog ~name:"pos"
+let lHeat=VertexArray.getLoc ~prog ~name:"heat"
 
-VertexArray.withBuffer ~loc:lGrid bGrid;;
-VertexArray.withBuffer ~loc:lHeat bHeat;;
+let vGrid = Slice.({stride=0; offset=0; nElements=2})
+let vHeat = Slice.({stride=0; offset=0; nElements=1});;
+
+VertexArray.withBuffer ~loc:lGrid bGrid vGrid;
+VertexArray.withBuffer ~loc:lHeat bHeat vHeat;;
 
 let theta=Uniform.scalar prog "theta" 0.
 
 let diffusion dt =
 	let clip i = if i<0 then i+size else ( if i>=size then i-size else i) in 
 	let pos i j= (clip i) *size + (clip j) in
-	let h i j= heat.{pos i j,0} in
+	let h i j= heat.{pos i j} in
 	let laplace i j=  4.*.(h i j)-.  h (i+1) j   -. h (i-1) j -.  h i (j+1) -. h i (j-1) in
 	let evolve a= for i=0 to size-1 do (
 			 for j=0 to (size-1) do (
 				let posC=pos i j in
-				 a.{posC,0} <- heat.{posC,0}  -. dt*. (laplace i j)
+				 a.{posC} <- heat.{posC}  -. dt*. (laplace i j)
 			 ) done 
 		) done 
-	and copy a i j = let posC = pos i j in heat.{posC,0}<- a.{posC,0} in
+	and copy a i j = let posC = pos i j in heat.{posC}<- a.{posC} in
 	let aux a=
 	 	evolve a; gridIter size size (copy a) in
 	BufferGl.update bHeat aux

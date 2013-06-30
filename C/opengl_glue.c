@@ -320,23 +320,23 @@ int type = uarr->flags & BIGARRAY_KIND_MASK;
 intnat* dims = uarr->dim;
 void* data= uarr-> data;
 
-printf( "Buffer Data :: type=%d, target=%d (%d), size=%ld, use=%d (%d) \n", type, c_target,GL_ARRAY_BUFFER, dims[0]*dims[1]*sizes[type], c_use, GL_STREAM_DRAW);
+//printf( "Buffer Data :: type=%d, target=%d (%d), size=%ld, use=%d (%d) \n", type, c_target,GL_ARRAY_BUFFER, dims[0]*sizes[type], c_use, GL_STREAM_DRAW);
 
-glBufferData(c_target, dims[0]*dims[1]*sizes[type],data,c_use);
+glBufferData(c_target, dims[0]*sizes[type],data,c_use);
 return;
 }
 
-CAMLprim value rglMapBuffer(value target,value access, value type, value xdim, value ydim){
-CAMLparam5(target,access,type, xdim, ydim);
+CAMLprim value rglMapBuffer(value target,value access, value type, value nel){
+CAMLparam4(target,access,type, nel);
 GLenum c_target=Int_val(target);
 GLenum c_access = Int_val(access);
 
-unsigned int c_xdim=Int_val(xdim), c_ydim=Int_val(ydim);
+unsigned int c_nel=Int_val(nel);
 unsigned int c_type= Int_val(type);
 
 void* p = glMapBuffer(c_target, c_access);
-intnat dims[2]={c_xdim,c_ydim};
-value V=alloc_bigarray( c_type | BIGARRAY_C_LAYOUT, 2,p, dims);
+intnat dims[1]={c_nel};
+value V=alloc_bigarray( c_type | BIGARRAY_C_LAYOUT, 1,p, dims);
 CAMLreturn(V);  
 }
 

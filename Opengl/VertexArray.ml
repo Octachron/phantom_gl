@@ -9,10 +9,12 @@ let getLoc ~prog ~name = Rgl.getAttribLocation (Program.uid prog) name
 let enable loc= Rgl.enableVertexAttribArray loc
 let disable loc = Rgl.disableVertexAttribArray loc
 
-let withBuffer ?normalized:(norm=false) ?stride:(stride=0) ?offset:(off=0) ~loc  buffer=
-  Printf.printf "WithBuffer \n";
+
+
+
+let withBuffer ?normalized:(norm=false)  ~loc  buffer slice=
   BufferGl.bind buffer;
   enable loc;
-  Rgl.vertexAttribPointer (uid loc) (snd ( BufferGl.dims  buffer ) ) (BufferGl.baType buffer) norm stride off;
+  let open Slice in Rgl.vertexAttribPointer (uid loc) (slice.nElements) (BufferGl.baType buffer) norm slice.stride slice.offset;
   BufferGl.unbind buffer
  

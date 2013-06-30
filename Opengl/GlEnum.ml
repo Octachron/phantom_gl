@@ -26,6 +26,9 @@ let depth = 0x00000100
 let stencil  = 0x00000400
 let color = 0x00004000
 
+let depth_test=0x0B71       
+
+
 let _true  =0
 let _false  =1
 

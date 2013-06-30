@@ -1,8 +1,8 @@
 open Bigarray
-type ('a,'b) t= {target:int; id : int; dims : int * int; baType : int}
+type ('a,'b) t= {target:int; id : int; nEl : int ; baType : int}
 
-let size b= let m, n = b.dims in m*n
-let dims b=b.dims
+let size b= b.nEl
+let dims b=b.nEl
 let baType b=b.baType 
 
 let bind b= Rgl.bindBuffer b.target b.id
@@ -10,7 +10,7 @@ let unbind b= Rgl.unbindBuffer b.target
 
 let create target data usage=
 	let id=Rgl.genBuffer() in
-        let b= { target=GlEnum.raw target;id; dims= (Array2.dim1 data, Array2.dim2 data) ; baType=Rgl.baType data } in
+        let b= { target=GlEnum.raw target;id; nEl= Array1.dim data ; baType=Rgl.baType data } in
 	bind b;
 	Rgl.bufferData b.target data  (GlEnum.raw usage);
 	unbind b; b
@@ -18,8 +18,7 @@ let create target data usage=
 
 let map access b=
 bind b;
-let (xdim,ydim) =b.dims in
-let arr=Rgl.mapBuffer b.target access b.baType xdim ydim in
+let arr=Rgl.mapBuffer b.target access b.baType b.nEl in
  arr
 
 let unmap b= Rgl.unmapBuffer b.target; unbind b

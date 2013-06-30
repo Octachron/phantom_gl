@@ -24,3 +24,12 @@ Executable  Laplace
   CClib: -lGL -lGLEW
   CompiledObject: native
   
+Executable  Fractal
+  Path:       .
+  BuildTools: ocamlbuild
+  MainIs:     Fractal.ml
+  BuildDepends: sdl
+  CSources: C/opengl_glue.c
+  CClib: -lGL -lGLEW
+  CompiledObject: native
+  

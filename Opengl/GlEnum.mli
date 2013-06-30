@@ -27,6 +27,8 @@ val depth :  <kind: [`BufferBit]; fusion : [`True]>  t
 val stencil :  <kind: [`BufferBit]; fusion : [`True]>  t
 val color :  <kind: [`BufferBit]; fusion : [`True]>  t
 
+val depth_test: <kind:[`Enable];fusion:[`True]> t
+
 val _true :  <kind: [`Bool]>  t
 val _false : <kind: [`Bool]> t
 

@@ -43,9 +43,9 @@ external genBuffer : unit -> int = "rglGenBuffer"
 external bindBuffer : int -> int -> unit = "rglBindBuffer"
 external unbindBuffer : int -> unit = "rglUnbindBuffer"
 
-external baType : ('a,'b,'c) Bigarray.Array2.t -> int = "rglBaType"
-external bufferData : int -> ('a,'b,Bigarray.c_layout) Bigarray.Array2.t ->int-> unit = "rglBufferData"
-external mapBuffer : int -> int -> int -> int -> int -> ('a,'b,Bigarray.c_layout) Bigarray.Array2.t = "rglMapBuffer"
+external baType : ('a,'b,'c) Bigarray.Array1.t -> int = "rglBaType"
+external bufferData : int -> ('a,'b,Bigarray.c_layout) Bigarray.Array1.t ->int-> unit = "rglBufferData"
+external mapBuffer : int -> int -> int -> int  -> ('a,'b,Bigarray.c_layout) Bigarray.Array1.t = "rglMapBuffer"
 external unmapBuffer : int -> unit = "rglUnmapBuffer"
 
 (* texture *)
