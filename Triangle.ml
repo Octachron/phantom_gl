@@ -6,21 +6,10 @@ let surface= Sdlvideo.set_video_mode ~w:500 ~h:500 ~bpp:0 [`OPENGL; `DOUBLEBUF];
 
 Rgl.glewInit();;
 
-
-let vecToArray a i v = let x,y,z=Vec3.(v.x,v.y,v.z) in
- a.{3*i} <- x; a.{3*i+1} <- y; a.{3*i+2} <- z 
-
-let vecListToArray a = ignore <> ( List.fold_left (fun i v -> (vecToArray a i v; i+1) ) 0  )
-
-let arrayfromVec3 l =
- let n = List.length l in
- let a=Bigarray.Array1.create Bigarray.float32 Bigarray.c_layout (3*n) in
-vecListToArray a l; a
-
 let vertex = 
  let open Vec3 in
  let z=zero in 
-  Slice.fromList (module Vec3)  [z; {z with x=1.}; {z with y=1.} ] 
+  Slice.fromList  (module Vec3)  [z; {z with x=1.}; {z with y=1.} ] 
 	
 
 let colors=Array1.of_array float32 c_layout

@@ -2,26 +2,28 @@ open FunOp
 
 module type Dim=
 sig
-	val dim : n
+	val dim : int
 end
 
 
 
 module Vect = functor ( D : Dim ) ->
 struct
-type t= float Array.t
+type t= float array
 
-type matrix =float Array.t
+type matrix =float array
 
+let dim=D.dim
 
 let fromArray v= 
 let a= Array.make D.dim 0. in
-for i=0 to (min (Array.length v) D.Dim )-1 do
+for i=0 to (min (Array.length v) dim )-1 do
 	a.(i)<-v.(i)
 done; a 
 
 let gen=Array.init D.dim
 
+let zero=Array.make dim 0.
 
 let mapOp op a b=gen (fun i ->  op a.(i) b.(i) )
 
