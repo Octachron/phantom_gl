@@ -24,3 +24,5 @@ let ( *: ) v w= v.x*.w.x +. v.y*.w.y
 end
 include(Vector.Space(Axioms))
 
+let vsplit  f v = f v.x v.y
+let uniform =  vsplit <> Rgl.uniform2f

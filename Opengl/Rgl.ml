@@ -24,7 +24,7 @@ external getUniformLocation : int -> string -> int  = "rglGetUniformLocation"
 external uniform1f : int -> float -> unit = "rglUniform1f"
 external uniform2f : int -> float -> float -> unit = "rglUniform2f"
 external uniform3f : int -> float -> float -> float-> unit = "rglUniform3f"
-
+external uniform4f : int -> float -> float -> float-> float -> unit = "rglUniform4f"
 
 (* Draw*)
 

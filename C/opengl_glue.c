@@ -186,6 +186,15 @@ CAMLprim value rglUniform3f(value mloc, value mx, value my, value mz){
 } 
 
 
+CAMLprim value rglUniform4f(value mloc, value mx, value my, value mz,value mt){
+	CAMLparam5(mloc,mx,my,mz,mt);
+	GLuint loc=Int_val(mloc);
+        float x=Double_val(mx),y=Double_val(my),z=Double_val(mz),t=Double_val(mt);
+	glUniform4f(loc,x,y,z,t);
+	CAMLreturn(Val_unit);
+} 
+
+
 /****
 Vertex Array
 *****/

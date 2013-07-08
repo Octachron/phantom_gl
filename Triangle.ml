@@ -9,21 +9,20 @@ Rgl.glewInit();;
 let vertex = 
  let open Vec3 in
  let z=zero in 
-  Slice.fromList  (module Vec3)  [z; {z with x=1.}; {z with y=1.} ] 
+  Slice.fromList  (module Vec3)  [z; {z with x=1.}; {z with y=1.} ; {z with z=1.} ] 
 	
 
-let colors=Array1.of_array float32 c_layout
-	[|  1.;0.;0.;1.;
-	    0.;1.;0.;1. ;  
-	    0.;0.;1.;1. 
-	 |]
+let colors=
+let open Vec4 in
+let b={zero with t=1.} in
+	Slice.fromList (module Vec4) [{b with x=1.}; {b with y=1.}; {b with z=1.}; {b with y=1.;z=1.} ]
 
 
 let index=Array1.of_array int16_unsigned c_layout
-	  [| 0 ; 1 ; 2  |] 
+	  [| 0 ; 1 ; 2; 0 ; 1 ; 3; 0; 2 ;3; 1 ;2 ;3    |] 
 
-let srv=Utils.load "shaders/simple.vert"
-let srf=Utils.load "shaders/simple.frag"
+let srv=Utils.load "shaders/triangle.vert"
+let srf=Utils.load "shaders/triangle.frag"
 
 let vert= Shader.compileVertFrom srv
 let frag= Shader.compileFragFrom srf
@@ -32,7 +31,7 @@ let prog=Program.create vert frag;;
 Program.use prog;;
 
 let bufferPos=BufferGl.create GlEnum.array vertex.Slice.data GlEnum.stream_draw
-let bCol=BufferGl.create GlEnum.array colors GlEnum.stream_draw
+let bCol=BufferGl.create GlEnum.array colors.Slice.data GlEnum.stream_draw
 
 let bIndex=BufferGl.create GlEnum.element index GlEnum.stream_draw
 
@@ -47,15 +46,20 @@ let vCol= Slice.({stride=0;offset=0;nElements=4});;
 VertexArray.withBuffer ~loc:posLoc bufferPos vPos;;
 VertexArray.withBuffer ~loc:colLoc bCol vCol;;
 
-BufferGl.update bCol (fun a -> a.{1}<- 1. );;
+let alpha= Uniform.scalar prog "alpha" 0.25
+let alpha=Uniform.(alpha =$ 0.5 )
 
-let rec loop () = Draw.clear GlEnum.(color++depth);  Draw.elementsWith ~buf:bIndex ~primitives:GlEnum.triangles ~start:0 ~len:3 ; Sdlgl.swap_buffers();
+let draw ()  = Draw.clear GlEnum.(color++depth);  Draw.elementsWith ~buf:bIndex ~primitives:GlEnum.triangles ~start:0 ~len:3 ; Sdlgl.swap_buffers()
+
+let rec loop t alpha =
+	let alpha'= Uniform.(alpha =$ ( (1. +. cos t)/.2. ) ) in
+	draw();
 	match Sdlevent.poll() with
 	    | Some Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE }
 	    | Some Sdlevent.QUIT -> ()
-	    | _ ->  loop();;
+	    | _ ->  loop (t+.0.05) alpha' ;;
 
-loop();
+loop 0. alpha;
 Sdl.quit();;
 
 

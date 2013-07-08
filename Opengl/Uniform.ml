@@ -24,10 +24,16 @@ let vsplit3 f v= Vec3.(f v.x v.y v.z)
 let vsplit2 f v=Vec2.(f v.x v.y)
 
 let scalar=create Rgl.uniform1f
-let vec2=create  ( vsplit2 <> Rgl.uniform2f ) 
-let vec3=create  ( vsplit3 <> Rgl.uniform3f )  
+let vec2=create  ( Vec2.vsplit <> Rgl.uniform2f ) 
+let vec3=create  ( Vec3.vsplit <> Rgl.uniform3f )  
  
+module type WithUniform =sig
+type t
+val uniform : int ->t -> unit
+end
 
+let from (type s)
+(module A : WithUniform with type t=s ) =  create (A.uniform)
 
 
 module Gadt=

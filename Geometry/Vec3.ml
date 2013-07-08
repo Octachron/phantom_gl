@@ -55,13 +55,19 @@ let rotation ax t v=
 	(cos(t) * (v-p) + p+  sin(t) * (ax *^ v)) 
 
 
+(** Opengl interface function **)
 let converter =let open Slice in
  { read = ( fun reader -> {x=reader 0;y=reader 1; z=reader 2} );  
   write = ( fun writer v ->  (writer 0 v.x; writer 1 v.y; writer 2 v.z)) }
+
+
 
 type ctype=Bigarray.float32_elt
 type otype=float
 let atype=Bigarray.float32
 let adim=3
- 
+  
+let vsplit  f v = f v.x v.y v.z
+let uniform =  vsplit <> Rgl.uniform3f
+
 
