@@ -242,7 +242,7 @@ long c_offset=  Int_val(offset) ;
 
 GLint c_type= gltypes[o_type]; 
 //printf("loc=%d, size=%d, type=%d (%d), norm=%d, stride=%d, c_offset=%ld \n", c_index,c_size,c_type,GL_FLOAT, c_norm, c_stride,c_offset);
-glVertexAttribPointer(c_index,c_size,c_type, c_norm, c_stride,  (void*) c_offset );
+glVertexAttribPointer(c_index,c_size,c_type, c_norm, c_stride*sizes[o_type],  (void*) c_offset );
 return;
 }
 
@@ -318,6 +318,8 @@ int ctype = Bigarray_val(array)->flags & BIGARRAY_KIND_MASK;
 value otype=Val_int(ctype);
 CAMLreturn(otype);
 }
+
+
 
 
 CAMLprim void rglBufferData(value targetType, value array, value usage ){

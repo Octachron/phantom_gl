@@ -9,13 +9,13 @@ Rgl.glewInit();;
 let vertex = 
  let open Vec3 in
  let z=zero in 
-  Slice.fromList  (module Vec3)  [z; {z with x=1.}; {z with y=1.} ; {z with z=1.} ] 
+  Overlay.fromList  (module Vec3)  [z; {z with x=1.}; {z with y=1.} ; {z with z=1.} ] 
 	
 
 let colors=
 let open Vec4 in
 let b={zero with t=1.} in
-	Slice.fromList (module Vec4) [{b with x=1.}; {b with y=1.}; {b with z=1.}; {b with y=1.;z=1.} ]
+	Overlay.fromList (module Vec4) [{b with x=1.}; {b with y=1.}; {b with z=1.}; {b with y=1.;z=1.} ]
 
 
 let index=Array1.of_array int16_unsigned c_layout
@@ -30,18 +30,18 @@ let frag= Shader.compileFragFrom srf
 let prog=Program.create vert frag;;
 Program.use prog;;
 
-let bufferPos=BufferGl.create GlEnum.array vertex.Slice.data GlEnum.stream_draw
-let bCol=BufferGl.create GlEnum.array colors.Slice.data GlEnum.stream_draw
+let bufferPos=BufferGl.create GlEnum.array vertex.Overlay.data GlEnum.stream_draw
+let bCol=BufferGl.create GlEnum.array colors.Overlay.data GlEnum.stream_draw
 
 let bIndex=BufferGl.create GlEnum.element index GlEnum.stream_draw
 
 
 
-let posLoc=VertexArray.getLoc ~prog ~name:"pos";;
-let colLoc=VertexArray.getLoc ~prog ~name:"color";;
+let posLoc=VertexArray.getLoc ~prog "pos";;
+let colLoc=VertexArray.getLoc ~prog "color";;
 
-let vPos= Slice.({stride=0;offset=0;nElements=3})
-let vCol= Slice.({stride=0;offset=0;nElements=4});;
+let vPos= Overlay.(full 3)
+let vCol= Overlay.(full 4);;
 
 VertexArray.withBuffer ~loc:posLoc bufferPos vPos;;
 VertexArray.withBuffer ~loc:colLoc bCol vCol;;

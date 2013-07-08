@@ -24,5 +24,11 @@ let ( *: ) v w= v.x*.w.x +. v.y*.w.y
 end
 include(Vector.Space(Axioms))
 
+
+(** Opengl interface function **)
+let converter =let open Overlay in
+ { read = ( fun reader -> {x=reader 0;y=reader 1} );  
+  write = ( fun writer v ->  (writer 0 v.x; writer 1 v.y)) }
+
 let vsplit  f v = f v.x v.y
 let uniform =  vsplit <> Rgl.uniform2f

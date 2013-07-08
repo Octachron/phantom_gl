@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 27f3c57440283848901f5cd8f80740de)
+# DO NOT EDIT (digest: 811b746577fb914d60fccf82721036e1)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -29,6 +29,14 @@
 "dllLaplace_stubs.so": oasis_executable_laplace_cclib
 "Laplace.native": use_libLaplace_stubs
 "Laplace.native": pkg_sdl
+# Executable Fractal
+"Fractal.native": oasis_executable_fractal_cclib
+"libFractal_stubs.lib": oasis_executable_fractal_cclib
+"dllFractal_stubs.dll": oasis_executable_fractal_cclib
+"libFractal_stubs.a": oasis_executable_fractal_cclib
+"dllFractal_stubs.so": oasis_executable_fractal_cclib
+"Fractal.native": use_libFractal_stubs
+"Fractal.native": pkg_sdl
 <*.ml{,i}>: pkg_sdl
 "C/opengl_glue.c": pkg_sdl
 # OASIS_STOP

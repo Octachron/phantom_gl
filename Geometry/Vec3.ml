@@ -56,7 +56,7 @@ let rotation ax t v=
 
 
 (** Opengl interface function **)
-let converter =let open Slice in
+let converter =let open Overlay in
  { read = ( fun reader -> {x=reader 0;y=reader 1; z=reader 2} );  
   write = ( fun writer v ->  (writer 0 v.x; writer 1 v.y; writer 2 v.z)) }
 

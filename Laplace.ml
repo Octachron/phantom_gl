@@ -66,11 +66,9 @@ let bIndex=BufferGl.create GlEnum.element index GlEnum.stream_draw
 
 
 
-let lGrid=VertexArray.getLoc ~prog ~name:"pos"
-let lHeat=VertexArray.getLoc ~prog ~name:"heat"
+let [lGrid;lHeat]= List.map (VertexArray.getLoc ~prog) ["pos"; "heat"]
 
-let vGrid = Slice.({stride=0; offset=0; nElements=2})
-let vHeat = Slice.({stride=0; offset=0; nElements=1});;
+let (vGrid, vHeat) = Overlay.(full 2, full 1);;
 
 VertexArray.withBuffer ~loc:lGrid bGrid vGrid;
 VertexArray.withBuffer ~loc:lHeat bHeat vHeat;;
