@@ -21,7 +21,7 @@ struct
 
 include(V)
 let norm2 v = V.(v*:v)
-let norm =  sqrt <> norm2 
+let norm =  sqrt -<- norm2 
  
 let projection axe v= V.( (axe *: v) * axe )
 

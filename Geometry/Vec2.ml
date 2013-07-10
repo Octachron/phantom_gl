@@ -31,4 +31,4 @@ let converter =let open Overlay in
   write = ( fun writer v ->  (writer 0 v.x; writer 1 v.y)) }
 
 let vsplit  f v = f v.x v.y
-let uniform =  vsplit <> Rgl.uniform2f
+let uniform =  vsplit -<- Rgl.uniform2f

@@ -24,8 +24,8 @@ let vsplit3 f v= Vec3.(f v.x v.y v.z)
 let vsplit2 f v=Vec2.(f v.x v.y)
 
 let scalar=create Rgl.uniform1f
-let vec2=create  ( Vec2.vsplit <> Rgl.uniform2f ) 
-let vec3=create  ( Vec3.vsplit <> Rgl.uniform3f )  
+let vec2=create  ( Vec2.vsplit -<- Rgl.uniform2f ) 
+let vec3=create  ( Vec3.vsplit -<- Rgl.uniform3f )  
  
 module type WithUniform =sig
 type t
@@ -54,7 +54,7 @@ let vsplit f v= Vec3.(f v.x v.y v.z)
 
 let rec send  : type a. a t -> unit= function
 | Scalar {x;uid} -> Rgl.uniform1f uid x
-| Vec3 {x;uid} ->     vsplit <> Rgl.uniform3f <| uid <| x
+| Vec3 {x;uid} ->     vsplit -<- Rgl.uniform3f <| uid <| x
 | Join (u1,u2) -> send u1; send u2 
 
 let rec update :type a. a t-> a -> a t=fun u x ->
@@ -71,7 +71,7 @@ let rec content: type a. a t -> a=function
 
 let ( =$ ) = update
 
-let (=~) u f = (update u) <> f <> content 
+let (=~) u f = (update u) -<- f -<- content 
 
 let scalar prog name x=Scalar (withName prog name x)
 let vec3 prog name x=Vec3 (withName prog name x)

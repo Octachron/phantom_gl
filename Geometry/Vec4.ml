@@ -39,4 +39,4 @@ let atype=Bigarray.float32
 let adim=4
  
 let vsplit  f v = f v.x v.y v.z v.t
-let uniform =  vsplit <> Rgl.uniform4f
+let uniform =  vsplit -<- Rgl.uniform4f

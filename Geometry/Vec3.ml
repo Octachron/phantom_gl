@@ -48,6 +48,11 @@ let ( *! ) m n =
 end
 include(Vector.Space(Axioms))
 
+
+let ex= {zero with x=1.}
+let ey= {zero with y=1.}
+let ez = {zero with z=1.}
+
 let ( *^ ) v w  = {x=v.y*.w.z-.v.z*.w.y; y =v.z*.w.x -. v.x *. w.z; z= v.x*.w.y -. v.y *. w.x}
 
 let rotation ax t v= 
@@ -68,6 +73,6 @@ let atype=Bigarray.float32
 let adim=3
   
 let vsplit  f v = f v.x v.y v.z
-let uniform =  vsplit <> Rgl.uniform3f
+let uniform =  vsplit -<- Rgl.uniform3f
 
 
