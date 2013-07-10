@@ -1,34 +1,22 @@
 open FunOp
-type t= {x:float;y:float}
 
+module D2= struct let dim=2 end
+include (Vect.With(D2))
 
-let create x y = {x;y}
-
-
-module Axioms=
-struct
-type vect=t 
-let print v=Printf.printf "(%f,%f)" v.x v.y
-
-
-let zero={x=0.;y=0.}
-
-let (+) v w={x=v.x+.w.x;y=v.y+.w.y}
-let (-) v w={x=v.x-.w.x;y=v.y-.w.y}
-let ( * ) s v={x=s*.v.x;y=s*.v.y}
-let ( / ) v s={x=v.x/.s;y=v.y/.s}
-
-let ( *: ) v w= v.x*.w.x +. v.y*.w.y
-
-
-end
-include(Vector.Space(Axioms))
 
 
 (** Opengl interface function **)
 let converter =let open Overlay in
- { read = ( fun reader -> {x=reader 0;y=reader 1} );  
-  write = ( fun writer v ->  (writer 0 v.x; writer 1 v.y)) }
+ { read = ( fun reader -> gen reader );  
+  write = ( fun writer v -> for i=0 to dim-1 do  writer i (v@i) done ) }
 
-let vsplit  f v = f v.x v.y
+
+type ctype=Bigarray.float32_elt
+type otype=float
+let atype=Bigarray.float32
+
+let (ex,ey) = canon 0, canon 1
+
+
+let vsplit  f v = f (v@0) (v@1)
 let uniform =  vsplit -<- Rgl.uniform2f

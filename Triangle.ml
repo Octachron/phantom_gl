@@ -8,14 +8,13 @@ Rgl.glewInit();;
 
 let vertex = 
  let open Vec3 in
- let z=zero in 
-  Overlay.fromList  (module Vec3)  [z; {z with x=1.}; {z with y=1.} ; {z with z=1.} ] 
+  Overlay.fromList  (module Vec3)  ([zero; ex; ey ; ez ])
 	
 
 let colors=
 let open Vec4 in
-let b={zero with t=1.} in
-	Overlay.fromList (module Vec4) [{b with x=1.}; {b with y=1.}; {b with z=1.}; {b with y=1.;z=1.} ]
+let l=List.map ( (+:) et)  [ ex; ey; ez; ey +: ez ]  in
+	Overlay.fromList (module Vec4) l
 
 
 let index=Array1.of_array int16_unsigned c_layout

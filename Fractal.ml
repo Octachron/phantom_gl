@@ -1,9 +1,11 @@
 
 module D3=
 struct
-	dim=3
+	let dim=3
 end
 
-module V3= Vect.Make(D3)
+module V3= Vect.With(D3)
 
-let v= V3.zero + V3.canon 1
+open V3
+
+let v=  canon 1 +: (2.*:id |: zero)

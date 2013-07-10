@@ -18,11 +18,6 @@ u =$ y
 let join u1 u2= { x=u1.x,u2.x; uid=u1.uid,u2.uid; send= ( fun (id1,id2) (x1,x2) ->( u1.send id1 x1; u2.send id2 x2) ) }
 
 
-
-
-let vsplit3 f v= Vec3.(f v.x v.y v.z)
-let vsplit2 f v=Vec2.(f v.x v.y)
-
 let scalar=create Rgl.uniform1f
 let vec2=create  ( Vec2.vsplit -<- Rgl.uniform2f ) 
 let vec3=create  ( Vec3.vsplit -<- Rgl.uniform3f )  
@@ -47,14 +42,13 @@ let withName prog name x= let uid = Rgl.getUniformLocation (Program.uid prog) na
 
 type _ t = 
 	| Scalar : float named -> float t
-	| Vec3 : Vec3.t named -> Vec3.t t 
+	| Vec3 : [`Vect] Vec3.t named -> [`Vect] Vec3.t t 
 	| Join : 'a t * 'b t -> ('a * 'b) t
 
-let vsplit f v= Vec3.(f v.x v.y v.z)
 
 let rec send  : type a. a t -> unit= function
 | Scalar {x;uid} -> Rgl.uniform1f uid x
-| Vec3 {x;uid} ->     vsplit -<- Rgl.uniform3f <| uid <| x
+| Vec3 {x;uid} ->     Vec3.vsplit -<- Rgl.uniform3f <| uid <| x
 | Join (u1,u2) -> send u1; send u2 
 
 let rec update :type a. a t-> a -> a t=fun u x ->

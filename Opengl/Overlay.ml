@@ -19,16 +19,16 @@ let view data slice conversion= {data;slice;conversion}
 
 
 module type Convertible=sig
-	type t
+	type ovect
 	type otype
 	type ctype
 	val atype : (otype, ctype) kind
-	val converter : (otype, t) conversion 
-	val adim: int
+	val converter : (otype, ovect) conversion 
+	val dim: int
 end
 
-let fromList (type el) (type otype) (type ctype) (module M : Convertible with type t=el and type otype=otype and type ctype=ctype ) (l: el list) =
-let slice =full M.adim 
+let fromList (type  el) (type otype) (type ctype) (module M : Convertible with type ovect=el and type otype=otype and type ctype=ctype ) (l: el list) =
+let slice =full M.dim 
 and n=List.length l in
 let data=Array1.create M.atype c_layout (n*slice.stride) in
 let view = {data;slice; conversion=M.converter } in
