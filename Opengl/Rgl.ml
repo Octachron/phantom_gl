@@ -26,6 +26,12 @@ external uniform2f : int -> float -> float -> unit = "rglUniform2f"
 external uniform3f : int -> float -> float -> float-> unit = "rglUniform3f"
 external uniform4f : int -> float -> float -> float-> float -> unit = "rglUniform4f"
 
+
+
+external uniformMatrix2fv : int -> int -> int-> float array ->  unit = "rglUniformMatrix2fv"
+external uniformMatrix3fv : int -> int -> int-> float array ->  unit = "rglUniformMatrix3fv"
+external uniformMatrix4fv : int -> int -> int -> float array ->  unit = "rglUniformMatrix4fv"
+
 (* Draw*)
 
 external drawArrays : int -> int -> int -> unit = "rglDrawArrays"

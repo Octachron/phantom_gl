@@ -3,6 +3,7 @@ open FunOp
 type ('a,'b) t= {x:'a; uid:'b; send:'b->'a->unit}
 
 let create send prog name x=let uid = Rgl.getUniformLocation (Program.uid prog) name in
+send uid x;
 {x;uid;send}
 
 let send {x; uid; send} = send uid x 
@@ -23,12 +24,12 @@ let vec2=create  ( Vec2.vsplit -<- Rgl.uniform2f )
 let vec3=create  ( Vec3.vsplit -<- Rgl.uniform3f )  
  
 module type WithUniform =sig
-type t
-val uniform : int ->t -> unit
+type s
+val uniform : int ->s-> unit
 end
 
 let from (type s)
-(module A : WithUniform with type t=s ) =  create (A.uniform)
+(module A : WithUniform with type s=s ) =  create (A.uniform)
 
 
 module Gadt=

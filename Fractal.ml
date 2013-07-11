@@ -1,11 +1,6 @@
 
-module D3=
-struct
-	let dim=3
-end
+open Vec3
 
-module V3= Vect.With(D3)
+let v=  canon 1 +: (2.*:id |: zero);;
 
-open V3
-
-let v=  canon 1 +: (2.*:id |: zero)
+print (rmatrix ez 0.75 )

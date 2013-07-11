@@ -4,17 +4,22 @@ uniform float theta;
 in vec2 pos;
 in float heat;
 out float oHeat;
+
+
+    float n=1;
+    float f=100;
+    float d= 1/ (tan(0.5) );
+    mat4 Proj = mat4(d,0,0, 0,
+                     0,d,0, 0,
+                     0, 0, (n+f)/(n-f), -1,
+		     0, 0,  2*n*f/(n-f) , 0 );
+
+
+
 void main(void)
 {
-    float c=cos(theta);
-    float s=sin(theta);
-    float phi=0.5; 
-    float cp=cos(phi);
-    float sp=sin(phi);
-    float z=0.5*heat+1;
-    vec3 v=vec3(pos,z);
-  //  v=vec3(c*v.x+s*v.y, -s*v.x + c*v.y,z);
-  //  v=vec3(v.x,cp*v.y+sp*v.z,cp*v.z-sp*v.y);
-    gl_Position=vec4(v.xy, v.z/2 , z);
+    float z= - (heat+2 );
+    vec4 v=vec4(pos,z,1);
+    gl_Position=Proj*v;
     oHeat=heat;	
 }

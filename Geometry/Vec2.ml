@@ -14,6 +14,7 @@ let converter =let open Overlay in
 type ctype=Bigarray.float32_elt
 type otype=float
 let atype=Bigarray.float32
+type ovect=vector
 
 let (ex,ey) = canon 0, canon 1
 

@@ -1,8 +1,7 @@
 #version 130
-uniform float alpha;
-in vec4 vColor;
+in vec3 vColor;
 
 void main(void)
 {
-    gl_FragColor = alpha*vColor;
+    gl_FragColor = vec4(vColor,1);
 }

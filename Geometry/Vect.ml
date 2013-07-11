@@ -19,6 +19,7 @@ type matrix = [`Matrix] t
 
 val dim : int
 
+val print : 'a t -> unit
 val raw  : 'a t -> float array
 val ( @ ) : vector -> int ->  float
 val ( @@ ) : matrix -> (int*int) ->  float
@@ -71,17 +72,24 @@ type matrix  = [`Matrix] t
 
 
 let dim=D.dim
+let len = Array.length
+
+let print v= 
+let print_a o a = Printf.fprintf o "%f" a.(0); for i=1 to (len v) -1 do Printf.fprintf o ",%f" a.(i) done  in
+Printf.printf "(%a)" print_a v
 
 let raw x = x
 let ( @ ) v i = v.(i)
 let  ( @@ ) m (i,j)= m.(i*dim +j)
+
+
 
 let vector : float array -> [`Vect] t = fun x ->  assertDim (Array.length x) dim; x
 let unsafe_vector : float array -> [`Vect] t = fun x ->  x
 let matrix : float array -> [`Vect] t = fun x ->  assertDim (Array.length x) (dim*dim); x
 
 
-
+let unsafe_gen :   int->(int->float) -> 'a  t=Array.init
 let gen :   (int->float) -> [`Vect] t=Array.init D.dim
 let const :  float -> [`Vect] t = fun c ->  Array.make dim c
 
@@ -95,11 +103,11 @@ let matrixGen2 : (int -> [`Vect] t) -> [`Matrix] t = fun f -> matrixGen (fun i  
 
 let id = matrixGen2 canon 
 
-let mapOp : (float->float->float) -> 'a t -> 'a t -> 'a t  = fun op a b -> gen (fun i ->  op a.(i) b.(i) )
+let mapOp : (float->float->float) -> 'a t -> 'a t -> 'a t  = fun op a b -> unsafe_gen (len a) (fun i ->  op a.(i) b.(i) )
 
 let reduce :('a -> float->float -> 'a) -> 'a -> 'b t -> 'b t -> 'a = fun op e a b ->
 let acc =ref e in
-for i=0 to D.dim -1 do acc := ( op (!acc) a.(i) b.(i) ) done;
+for i=0 to (len a) -1 do acc := ( op (!acc) a.(i) b.(i) ) done;
 !acc 
 
 let (  +: ) x y=mapOp (+.) x y

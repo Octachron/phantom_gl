@@ -14,20 +14,45 @@ let rotation ax t v=
 	(cos(t) *: (v-:p) +: p+:  sin(t) *: (ax ^: v)) 
 
 
+let rmatrix ax t = matrixGen2 (rotation ax t -<- canon)
+
+let vsplit  f v = f (v@0) (v@1) (v@2)
+
 (** Opengl interface function **)
+module Gl=struct
 let converter =let open Overlay in
- { read = ( fun reader -> gen reader );  
+ { read = gen ;  
   write = ( fun writer v -> for i=0 to dim-1 do  writer i (v@i) done ) }
-
-
-
 
 type ctype=Bigarray.float32_elt
 type otype=float
 let atype=Bigarray.float32
 
-  
-let vsplit  f v = f (v@0) (v@1) (v@2)
+ let dim=dim 
+
 let uniform =  vsplit -<- Rgl.uniform3f
 
-type ovect= [`Vect] t
+type s= [`Vect] t
+end
+
+
+module GlMat=struct
+let converter =let open Overlay in
+ { read = matrix -<- ( Array.init (dim*dim) ) ;  
+  write = ( fun writer v -> 
+	for i=0 to dim-1 do
+		for j=0 to dim-1 do 
+			writer (i*dim+j) (v@@(i,j) ) 
+		done 
+	done ) }
+
+type ctype=Bigarray.float32_elt
+type otype=float
+let atype=Bigarray.float32
+
+ let dim=dim*dim 
+
+let uniform loc m = Rgl.uniformMatrix3fv loc 1  0 (raw m)
+
+type s= [`Matrix] t
+end

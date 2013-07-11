@@ -42,7 +42,7 @@ return;
 
 CAMLprim void rglEnable(value w){
 int cw=Int_val(w);
-glClear(cw);
+glEnable(cw);
 return;
 }
 
@@ -52,14 +52,16 @@ Shader functions
 
 CAMLprim value rglShaderCreate(value type){
 CAMLparam1(type);
+CAMLlocal1(oid);
 unsigned int gltype= (Int_val(type)==0)?GL_VERTEX_SHADER:GL_FRAGMENT_SHADER;
 unsigned int id=0;
 
 id=glCreateShader(gltype);
-
+oid=Val_int(id);
 if(id==0)
 	perror("Shader creation failure \n");
-	CAMLreturn (Val_int(id));
+	
+	CAMLreturn (oid);
 }
 
 CAMLprim value rglShaderLoad(value id, value src){
@@ -109,6 +111,7 @@ Opengl program functions
 CAMLprim value rglProgramCreate(value nil){
 CAMLparam1(nil);
 GLuint id = glCreateProgram();
+
 CAMLreturn (Val_int(id));
 }
 CAMLprim value rglProgramDelete(value id) { 
@@ -194,6 +197,41 @@ CAMLprim value rglUniform4f(value mloc, value mx, value my, value mz,value mt){
 	CAMLreturn(Val_unit);
 } 
 
+
+
+CAMLprim value rglUniformMatrix2fv(value oLoc, value oCount, value oTranspose, value oArray){
+	CAMLparam4(oLoc,oCount, oArray, oTranspose);
+	GLuint loc=Int_val(oLoc), count =Int_val(oCount); 
+	GLboolean transpose=Int_val(oTranspose);
+	double* p =&Double_field(oArray,0); float* converted = malloc(count*4*sizeof(float));
+	int i; for( i= 0;i<count*4;++i) converted[i] = p[i] ;
+	glUniformMatrix2fv(loc,count, transpose, converted );
+	free(converted);
+	CAMLreturn(Val_unit);
+} 
+
+CAMLprim value rglUniformMatrix3fv(value oLoc, value oCount, value oTranspose, value oArray){
+	CAMLparam4(oLoc,oCount, oArray, oTranspose);
+	GLuint loc=Int_val(oLoc), count =Int_val(oCount); 
+	GLboolean transpose=Int_val(oTranspose);
+	double* p =&Double_field(oArray,0); float* converted = malloc(count*9*sizeof(float));
+	int i; for( i= 0;i<count*9;++i) converted[i] = p[i] ;
+	glUniformMatrix3fv(loc,count, transpose, converted );
+	free(converted);	
+	CAMLreturn(Val_unit);
+} 
+
+
+CAMLprim value rglUniformMatrix4fv(value oLoc, value oCount, value oTranspose, value oArray){
+	CAMLparam4(oLoc,oCount, oArray, oTranspose);
+	GLuint loc=Int_val(oLoc), count =Int_val(oCount); 
+	GLboolean transpose=Int_val(oTranspose);
+	double* p =&Double_field(oArray, 0 ); float* converted = malloc(count*16*sizeof(float));
+	int i; for( i= 0;i<count*16;++i) converted[i] = p[i] ;
+	glUniformMatrix4fv(loc,count, transpose, converted );
+	free(converted);
+	CAMLreturn(Val_unit);
+} 
 
 /****
 Vertex Array
@@ -283,8 +321,10 @@ Buffer
 
 CAMLprim value rglGenBuffer(value nil){
 CAMLparam1(nil);
+
 GLuint id=0;
 glGenBuffers(1, &id);
+
 CAMLreturn(Val_int(id));
 }
 
@@ -312,11 +352,12 @@ return ;
 
 CAMLprim value rglBaType(value array){
 CAMLparam1(array);
+
 int ctype = Bigarray_val(array)->flags & BIGARRAY_KIND_MASK;
 //printf("ctype=%d \n",ctype);
 //ctype= gltypes[ctype];
-value otype=Val_int(ctype);
-CAMLreturn(otype);
+
+CAMLreturn(Val_int(ctype));
 }
 
 
@@ -339,6 +380,7 @@ return;
 
 CAMLprim value rglMapBuffer(value target,value access, value type, value nel){
 CAMLparam4(target,access,type, nel);
+CAMLlocal1(V);
 GLenum c_target=Int_val(target);
 GLenum c_access = Int_val(access);
 
@@ -347,7 +389,8 @@ unsigned int c_type= Int_val(type);
 
 void* p = glMapBuffer(c_target, c_access);
 intnat dims[1]={c_nel};
-value V=alloc_bigarray( c_type | BIGARRAY_C_LAYOUT, 1,p, dims);
+
+V=alloc_bigarray( c_type | BIGARRAY_C_LAYOUT, 1,p, dims);
 CAMLreturn(V);  
 }
 

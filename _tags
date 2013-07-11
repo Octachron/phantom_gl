@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 811b746577fb914d60fccf82721036e1)
+# DO NOT EDIT (digest: 972597e67df984537a291d73d7be6d85)
 # Ignore VCS directories, you can use the same kind of rule outside 
 # OASIS_START/STOP if you want to exclude directories that contains 
 # useless stuff for the build process
@@ -39,5 +39,6 @@
 "Fractal.native": pkg_sdl
 <*.ml{,i}>: pkg_sdl
 "C/opengl_glue.c": pkg_sdl
+"Fractal.native": custom
 # OASIS_STOP
 <General> or <Geometry> or <Opengl> : include
