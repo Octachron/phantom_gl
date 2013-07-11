@@ -73,7 +73,9 @@ let (vGrid, vHeat) = Overlay.(full 2, full 1);;
 VertexArray.withBuffer ~loc:lGrid bGrid vGrid;
 VertexArray.withBuffer ~loc:lHeat bHeat vHeat;;
 
-let theta=Uniform.scalar prog "theta" 0.
+let rot=Uniform.from (module Vec3.GlMat) prog "Rot" (Vec3.rmatrix Vec3.ex (0.))
+let proj=Uniform.from (module Vec4.GlMat) prog "Proj" (Vec4.perspective 1. 10.)
+
 
 let diffusion dt =
 	let clip i = if i<0 then i+size else ( if i>=size then i-size else i) in 
@@ -95,13 +97,18 @@ let dt=0.01
 
 
 
-let rec loop theta = Draw.clear GlEnum.(color++depth); diffusion dt ;  Draw.elementsWith ~buf:bIndex ~primitives:GlEnum.quads ~start:0 ~len:(BufferGl.size bIndex) ; Sdlgl.swap_buffers();
+let rec loop t rot= 
+Draw.clear GlEnum.(color++depth); 
+diffusion dt ;  
+let rot'= Uniform.(rot =$ Vec3.rmatrix Vec3.ex (-.t) ) in
+Draw.elementsWith ~buf:bIndex ~primitives:GlEnum.quads ~start:0 ~len:(BufferGl.size bIndex) ; 
+Sdlgl.swap_buffers();
 	match Sdlevent.poll() with
 	    | Some Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE }
 	    | Some Sdlevent.QUIT -> ()
-	    | _ ->  loop  Uniform.( theta =~ (+.) 0.01 );;
+	    | _ ->  loop  (t+.dt) rot' ;;
 
-loop theta;
+loop 0. rot;
 Sdl.quit();;
 
 
