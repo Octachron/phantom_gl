@@ -16,6 +16,12 @@ let create target data usage=
 	Rgl.bufferData b.target data  (GlEnum.raw usage);
 	unbind b; b
 
+let write buffer offset nEl data =  
+	bind buffer;
+	Rgl.bufferSubData buffer.target offset nEl data;
+	unbind buffer
+
+let writeTo offset nEl data buffer =  write buffer offset nEl data 
 
 let map access b=
 bind b;

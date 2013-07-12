@@ -73,8 +73,9 @@ let (vGrid, vHeat) = Overlay.(full 2, full 1);;
 VertexArray.withBuffer ~loc:lGrid bGrid vGrid;
 VertexArray.withBuffer ~loc:lHeat bHeat vHeat;;
 
-let rot=Uniform.from (module Vec3.GlMat) prog "Rot" (Vec3.rmatrix Vec3.ex (0.))
-let proj=Uniform.from (module Vec4.GlMat) prog "Proj" (Vec4.perspective 1. 10.)
+let rot=Uniform.from (module Vec3.GlMat) prog "Rot"
+let proj=Uniform.( from (module Vec4.GlMat) prog "Proj" <*  sendTo  (Vec4.perspective 1. 10.) )
+
 
 
 let diffusion dt =
@@ -97,18 +98,18 @@ let dt=0.01
 
 
 
-let rec loop t rot= 
+let rec loop t= 
 Draw.clear GlEnum.(color++depth); 
 diffusion dt ;  
-let rot'= Uniform.(rot =$ Vec3.rmatrix Vec3.ex (-.t) ) in
+ Uniform.(rot <<< Vec3.rmatrix Vec3.ex (-.t) ) ;
 Draw.elementsWith ~buf:bIndex ~primitives:GlEnum.quads ~start:0 ~len:(BufferGl.size bIndex) ; 
 Sdlgl.swap_buffers();
 	match Sdlevent.poll() with
 	    | Some Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE }
 	    | Some Sdlevent.QUIT -> ()
-	    | _ ->  loop  (t+.dt) rot' ;;
+	    | _ ->  loop  (t+.dt) ;;
 
-loop 0. rot;
+loop 0.;
 Sdl.quit();;
 
 

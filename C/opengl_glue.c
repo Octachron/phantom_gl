@@ -324,7 +324,6 @@ CAMLparam1(nil);
 
 GLuint id=0;
 glGenBuffers(1, &id);
-
 CAMLreturn(Val_int(id));
 }
 
@@ -378,6 +377,22 @@ glBufferData(c_target, dims[0]*sizes[type],data,c_use);
 return;
 }
 
+
+
+CAMLprim void rglBufferSubData(value oKind, value oOffset, value oSize, value oArray){
+//CAMLparam3(targetType, array, usage );
+GLuint kind= Int_val(oKind), off=Int_val(oOffset), size=Int_val(oSize);
+
+struct caml_ba_array* arr= Bigarray_val(oArray);
+unsigned int type = arr->flags & BIGARRAY_KIND_MASK;
+
+void* data= arr-> data;
+GLintptr p_off= (GLintptr) ( off*sizes[type]);
+glBufferSubData(kind, p_off,size*sizes[type],data);
+return;
+}
+
+
 CAMLprim value rglMapBuffer(value target,value access, value type, value nel){
 CAMLparam4(target,access,type, nel);
 CAMLlocal1(V);
@@ -399,6 +414,19 @@ CAMLprim void rglUnmapBuffer(value target){
 //CAMLparam1(target);
 GLenum c_target=Int_val(target);
 glUnmapBuffer(c_target);
+return;
+}
+
+
+
+CAMLprim void rglCopyBufferSubData(value oKindR, value oKindW,  value oOffsetR, value oOffsetW , value oSize){
+//CAMLparam3(targetType, array, usage );
+GLuint kindR= Int_val(oKindR), offR=Int_val(oOffsetR), kindW= Int_val(oKindW), offW=Int_val(oOffsetW),  size=Int_val(oSize);
+
+GLintptr p_offR= (GLintptr) ( offR);
+GLintptr p_offW= (GLintptr) ( offW);
+
+glCopyBufferSubData(kindR, kindW,  p_offR, p_offW , size);
 return;
 }
 

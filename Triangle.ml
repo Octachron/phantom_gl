@@ -17,7 +17,10 @@ let open Vec3 in
 	Overlay.fromList (module Gl) [ ex; ey; ez; const 1.  ]
 
 
-
+let colors2=
+	let open Vec3 in
+	let l= List.map (fun v -> v/:8. +: const 0.5 ) [ex;ey;ez; const 1. ] in
+	Overlay.fromList (module Gl) l
 
 let index=Array1.of_array int16_unsigned c_layout
 	  [| 0 ; 1 ; 2; 0 ; 1 ; 3; 0; 2 ;3; 1 ;2 ;3    |] 
@@ -33,8 +36,11 @@ let frag= Shader.compileFragFrom srf
 let prog=Program.create vert frag;;
 Program.use prog;;
 
-let bufferPos=BufferGl.create GlEnum.array vertex.Overlay.data GlEnum.stream_draw
-let bCol=BufferGl.create GlEnum.array colors.Overlay.data GlEnum.stream_draw
+let bufferPos=BufferGl.create GlEnum.array vertex.Overlay.data GlEnum.stream_draw 
+
+
+
+let bCol=BufferGl.create GlEnum.array colors.Overlay.data GlEnum.stream_draw <* BufferGl.writeTo 0 12  colors2.Overlay.data
 
 let bIndex=BufferGl.create GlEnum.element index GlEnum.stream_draw
 
@@ -51,22 +57,25 @@ VertexArray.withBuffer ~loc:colLoc bCol vCol;;
 
 
 let ax = Vec3.( normalised (ex +: ez ) ) 
-let rot= Uniform.from (module Vec3.GlMat) prog "rot" (Vec3.rmatrix ax 0.)
+let rot= Uniform.( from (module Vec3.GlMat) prog "rot" <* sendTo Vec3.id )
 
-let proj=Uniform.from (module Vec4.GlMat) prog "proj" (Vec4.perspective ~near:1. 10.);;
+let proj=Uniform.( from (module Vec4.GlMat) prog "proj" <*  sendTo  (Vec4.perspective 1. 10.) )
+
+
 
 
 let draw ()  = Draw.clear GlEnum.(color++depth);  Draw.elementsWith ~buf:bIndex ~primitives:GlEnum.triangles ~start:0 ~len:12 ; Sdlgl.swap_buffers()
 
-let rec loop t rot =
-	let rot'= Uniform.(rot =$  (Vec3.rmatrix ax t)  ) in
+let rec loop t =
+	 Uniform.(rot <<<  Vec3.rmatrix ax t   );
 	draw();
 	match Sdlevent.poll() with
 	    | Some Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE }
 	    | Some Sdlevent.QUIT -> ()
-	    | _ ->  loop (t+.0.05) rot' ;;
+	    | _ ->  loop (t+.0.05) ;;
 
-loop 0. rot;
+Uniform.( rot <<< Vec3.id ; proj <<< Vec4.perspective 1. 10.);
+loop 0. ;
 Sdl.quit();;
 
 
