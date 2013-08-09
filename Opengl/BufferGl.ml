@@ -11,7 +11,7 @@ let unbind b= Rgl.unbindBuffer b.target
 
 let create target data usage=
 	let id=Rgl.genBuffer() in
-        let b= { target=GlEnum.raw target;id; nEl= Array1.dim data ; baType=Rgl.baType data } in
+        let b= { target=GlEnum.raw target;id; nEl= Array1.dim data ; baType=Rbytes.baType data } in
 	bind b;
 	Rgl.bufferData b.target data  (GlEnum.raw usage);
 	unbind b; b

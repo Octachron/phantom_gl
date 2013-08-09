@@ -349,7 +349,7 @@ return ;
 
 
 
-CAMLprim value rglBaType(value array){
+CAMLprim value baType(value array){
 CAMLparam1(array);
 
 int ctype = Bigarray_val(array)->flags & BIGARRAY_KIND_MASK;
@@ -357,6 +357,14 @@ int ctype = Bigarray_val(array)->flags & BIGARRAY_KIND_MASK;
 //ctype= gltypes[ctype];
 
 CAMLreturn(Val_int(ctype));
+}
+
+
+CAMLprim value sizeOf(value ctype){
+CAMLparam1(ctype);
+
+int s=sizes[Int_val(ctype)];
+CAMLreturn(Val_int(s));
 }
 
 

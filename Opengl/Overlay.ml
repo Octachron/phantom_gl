@@ -9,7 +9,7 @@ type ('a, 'b) conversion = {read : (int -> 'a) -> 'b; write : (int->'a->unit) ->
 
 type ('a,'b,'c, 'd) view = { data : ('a,'b,'c) Array1.t; slice: t; conversion : ('a,'d) conversion  }
 
-let reader view index= fun i ->   view.data.{view.slice.stride*index +view.slice.offset +i }
+let reader view index= fun i ->  let s=view.slice in view.data.{s.stride*index +s.offset +i }
 let writer view index= fun i x -> let s=view.slice in  view.data.{s.stride*index +s.offset +i }<- x
 
 let ( @: ) view index = view.conversion.read (reader view index)

@@ -19,7 +19,7 @@ let open Vec3 in
 
 let colors2=
 	let open Vec3 in
-	let l= List.map (fun v -> v/:8. +: const 0.5 ) [ex;ey;ez; const 1. ] in
+	let l=  [ex;ey;ez; const 1. ] in
 	Overlay.fromList (module Gl) l
 
 let index=Array1.of_array int16_unsigned c_layout

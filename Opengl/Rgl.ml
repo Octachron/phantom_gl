@@ -1,3 +1,5 @@
+
+
 (* Init *)
 external glewInit : unit -> unit ="rglGlewInit" 
 
@@ -49,7 +51,7 @@ external genBuffer : unit -> int = "rglGenBuffer"
 external bindBuffer : int -> int -> unit = "rglBindBuffer"
 external unbindBuffer : int -> unit = "rglUnbindBuffer"
 
-external baType : ('a,'b,'c) Bigarray.Array1.t -> int = "rglBaType"
+
 external bufferData : int -> ('a,'b,Bigarray.c_layout) Bigarray.Array1.t ->int-> unit = "rglBufferData"
 external bufferSubData : int -> int->int-> ('a,'b,Bigarray.c_layout) Bigarray.Array1.t->  unit = "rglBufferSubData"
 
