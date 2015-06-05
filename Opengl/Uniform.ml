@@ -3,7 +3,7 @@ open FunOp
 type ('a,'b) t  = {uid:'b; send : 'b -> 'a -> unit}
 
 
-let create send prog name=let uid = Rgl.getUniformLocation (Program.uid prog) name in
+let create send prog name=let uid = Rgl.getUniformLocation prog name in
 {uid;send}
 
 let send {uid; send} x = send uid x 
@@ -22,7 +22,7 @@ let scalar=create Rgl.uniform1f
 
 module type WithUniform =sig
 type s
-val uniform : int ->s-> unit
+val uniform : [`Uniform] Handle.t ->s-> unit
 end
 
 let from (type s)
@@ -33,7 +33,7 @@ let from (type s)
 module Store=struct
 type ('a,'b) t= {x:'a; uid:'b; send:'b->'a->unit}
 
-let create send prog name x=let uid = Rgl.getUniformLocation (Program.uid prog) name in
+let create send prog name x=let uid = Rgl.getUniformLocation prog name in
 send uid x;
 {x;uid;send}
 
@@ -54,7 +54,7 @@ let scalar=create Rgl.uniform1f
  
 module type WithUniform =sig
 type s
-val uniform : int ->s-> unit
+val uniform : [`Uniform] Handle.t ->s-> unit
 end
 
 let from (type s)
@@ -64,11 +64,11 @@ end
 
 module Gadt=
 struct
-type 'a named = {x:'a; uid : int}
+type 'a named = {x:'a; uid : [`Uniform] Handle.t}
 
 let uid {uid;_}=uid
 
-let withName prog name x= let uid = Rgl.getUniformLocation (Program.uid prog) name in
+let withName prog name x= let uid = Rgl.getUniformLocation prog name in
 {x;uid}
 
 type _ t = 
@@ -107,14 +107,14 @@ end
 module type UniformContent =
 sig
   type t
-  val send : int->t -> unit
+  val send : [`Uniform] Handle.t->t -> unit
 end 
 
 
 module Gen= functor(X : UniformContent) ->
 struct
-type t={ x:X.t; uid:int }
-let create prog name x= let uid = Rgl.getUniformLocation (Program.uid prog) name in
+type t={ x:X.t; uid:[`Uniform] Handle.t }
+let create prog name x= let uid = Rgl.getUniformLocation prog name in
 {x;uid}
 
 let ( =$ ) u nex=

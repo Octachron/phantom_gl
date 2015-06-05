@@ -1,7 +1,6 @@
-type t
-val uid : t -> int
+type t = [`Program] Handle.t
 
-val genUid : unit -> t 
+val gen : unit -> t 
 val attach : t -> vert:[`Vertex] Shader.t -> frag:[`Fragment] Shader.t -> unit
 val link : t -> unit
 

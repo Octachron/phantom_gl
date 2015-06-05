@@ -1,12 +1,11 @@
-type t =int
+type t = [`Program] Handle.t
  
-let uid p= p
 
-let genUid = Rgl.programCreate
-let attach p ~vert ~frag = Rgl.programAttach p (Shader.uid frag) ; Rgl.programAttach p (Shader.uid vert) 
+let gen = Rgl.programCreate
+let attach p ~vert ~frag = Rgl.programAttach p (Shader.untype frag) ; Rgl.programAttach p (Shader.untype vert) 
 let link = Rgl.programLink
 let use =Rgl.programUse
 
 let create ~vert ~frag = 
-  let p =genUid() in
+  let p =gen() in
     attach p vert frag; link p; use p; p

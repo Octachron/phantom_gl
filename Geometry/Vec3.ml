@@ -20,7 +20,7 @@ let vsplit  f v = f (v@0) (v@1) (v@2)
 
 (** Opengl interface function **)
 module Gl=struct
-let converter =let open Overlay in
+let adaptor =let open Overarray in
  { read = gen ;  
   write = ( fun writer v -> for i=0 to dim-1 do  writer i (v@i) done ) }
 
@@ -37,7 +37,7 @@ end
 
 
 module GlMat=struct
-let converter =let open Overlay in
+let adaptor =let open Overarray in
  { read = matrix -<- ( Array.init (dim*dim) ) ;  
   write = ( fun writer v -> 
 	for i=0 to dim-1 do

@@ -1,5 +1,5 @@
 type 'a t
-val uid : 'a t -> int
+val untype : 'a t -> [`Shader] Handle.t
 
 val createVert :  unit -> [`Vertex] t
 val createFrag : unit -> [`Fragment] t

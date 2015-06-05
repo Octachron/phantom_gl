@@ -1,8 +1,9 @@
 # OASIS_START
-# DO NOT EDIT (digest: 972597e67df984537a291d73d7be6d85)
-# Ignore VCS directories, you can use the same kind of rule outside 
-# OASIS_START/STOP if you want to exclude directories that contains 
+# DO NOT EDIT (digest: cf92d895f0752b5c80e081f1ab4f1fcd)
+# Ignore VCS directories, you can use the same kind of rule outside
+# OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
+true: annot, bin_annot
 <**/.svn>: -traverse
 <**/.svn>: not_hygienic
 ".bzr": -traverse
@@ -14,31 +15,32 @@
 "_darcs": -traverse
 "_darcs": not_hygienic
 # Executable Triangle
-"Triangle.native": oasis_executable_triangle_cclib
+"Triangle_main.native": oasis_executable_triangle_cclib
 "libTriangle_stubs.lib": oasis_executable_triangle_cclib
 "dllTriangle_stubs.dll": oasis_executable_triangle_cclib
 "libTriangle_stubs.a": oasis_executable_triangle_cclib
 "dllTriangle_stubs.so": oasis_executable_triangle_cclib
-"Triangle.native": use_libTriangle_stubs
-"Triangle.native": pkg_sdl
+"Triangle_main.native": use_libTriangle_stubs
+"Triangle_main.native": pkg_tsdl
+<*.ml{,i,y}>: pkg_tsdl
+"opengl_glue.c": pkg_tsdl
 # Executable Laplace
-"Laplace.native": oasis_executable_laplace_cclib
+"Laplace_main.native": oasis_executable_laplace_cclib
 "libLaplace_stubs.lib": oasis_executable_laplace_cclib
 "dllLaplace_stubs.dll": oasis_executable_laplace_cclib
 "libLaplace_stubs.a": oasis_executable_laplace_cclib
 "dllLaplace_stubs.so": oasis_executable_laplace_cclib
-"Laplace.native": use_libLaplace_stubs
-"Laplace.native": pkg_sdl
+"Laplace_main.native": use_libLaplace_stubs
+"Laplace_main.native": pkg_sdl
 # Executable Fractal
-"Fractal.native": oasis_executable_fractal_cclib
+"Fractal_main.native": oasis_executable_fractal_cclib
 "libFractal_stubs.lib": oasis_executable_fractal_cclib
 "dllFractal_stubs.dll": oasis_executable_fractal_cclib
 "libFractal_stubs.a": oasis_executable_fractal_cclib
 "dllFractal_stubs.so": oasis_executable_fractal_cclib
-"Fractal.native": use_libFractal_stubs
-"Fractal.native": pkg_sdl
-<*.ml{,i}>: pkg_sdl
-"C/opengl_glue.c": pkg_sdl
-"Fractal.native": custom
+"Fractal_main.native": use_libFractal_stubs
+"Fractal_main.native": pkg_sdl
+<*.ml{,i,y}>: pkg_sdl
+"opengl_glue.c": pkg_sdl
 # OASIS_STOP
-<General> or <Geometry> or <Opengl> : include
+<C> or <General> or <Geometry> or <Opengl> or <Opengl/Typed> or <Opengl/Imperfect> or <Opengl/Discarded> or <Parser> : include

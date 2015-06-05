@@ -3,10 +3,20 @@ type 'a t = int
 
 let raw x = x
 
-let byte= 0x1400
 
-let array  = 0x8892
-let element = 0x8893
+let vertex_shader=0x8B31
+let fragment_shader=0x8B30
+
+
+
+
+(** Buffer target type **)
+let byte_buffer= 0x1400
+let array_buffer  = 0x8892
+let element_buffer = 0x8893
+
+let copy_read_buffer=0x8F36
+let copy_write_buffer=0x8F37
 
 
 let stream_draw  = 0x88E0

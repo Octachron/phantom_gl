@@ -1,35 +1,34 @@
-OASISFormat: 0.3
+OASISFormat: 0.4
 Name:        Wyrd
 Version:     0.01
-Synopsis:    Functionnal Text Tools
+Synopsis:    Ocaml openGL binding and more
 Authors:     Ego
 License:     LGPL
+Plugins: META (0.4), DevFiles (0.4)
+Buildtools: ocamlbuild
 
 
 Executable  Triangle
   Path:       .
-  BuildTools: ocamlbuild
-  MainIs:     Triangle.ml
-  BuildDepends: sdl
-  CSources: C/opengl_glue.c
+  MainIs:     Triangle_main.ml
+  BuildDepends: tsdl
+  CSources: opengl_glue.c
   CClib: -lGL -lGLEW
   CompiledObject: native
   
 Executable  Laplace
   Path:       .
-  BuildTools: ocamlbuild
-  MainIs:     Laplace.ml
+  MainIs:     Laplace_main.ml
   BuildDepends: sdl
-  CSources: C/opengl_glue.c
+  CSources: opengl_glue.c
   CClib: -lGL -lGLEW
   CompiledObject: native
   
 Executable  Fractal
   Path:       .
   BuildTools: ocamlbuild
-  MainIs:     Fractal.ml
+  MainIs:     Fractal_main.ml
   BuildDepends: sdl
-  CSources: C/opengl_glue.c
+  CSources: opengl_glue.c
   CClib: -lGL -lGLEW
   CompiledObject: native
-  

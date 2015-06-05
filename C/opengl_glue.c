@@ -26,6 +26,7 @@ Init
 
 CAMLprim value rglGlewInit(value unit){
 CAMLparam1(unit);
+glewExperimental = GL_TRUE; 
 glewInit();
 CAMLreturn(Val_unit);
 }
@@ -53,7 +54,7 @@ Shader functions
 CAMLprim value rglShaderCreate(value type){
 CAMLparam1(type);
 CAMLlocal1(oid);
-unsigned int gltype= (Int_val(type)==0)?GL_VERTEX_SHADER:GL_FRAGMENT_SHADER;
+unsigned int gltype= Int_val(type);
 unsigned int id=0;
 
 id=glCreateShader(gltype);
@@ -276,11 +277,11 @@ CAMLprim void rglVertexAttribPointer(value index, value size, value type, value 
 
 GLuint c_index = Int_val(index), c_size=Int_val(size), o_type= Int_val(type), c_norm=Int_val(normalized), c_stride=Int_val(stride);
 
-long c_offset=  Int_val(offset) ;
+GLintptr c_offset=  Int_val(offset) ;
 
 GLint c_type= gltypes[o_type]; 
 //printf("loc=%d, size=%d, type=%d (%d), norm=%d, stride=%d, c_offset=%ld \n", c_index,c_size,c_type,GL_FLOAT, c_norm, c_stride,c_offset);
-glVertexAttribPointer(c_index,c_size,c_type, c_norm, c_stride*sizes[o_type],  (void*) c_offset );
+glVertexAttribPointer(c_index,c_size,c_type, c_norm, c_stride,  (void*) c_offset );
 return;
 }
 
@@ -312,12 +313,37 @@ return;
 }
 
 
+/************
+VAO 
+*************/
+
+CAMLprim value rglGenVertexArray(value nil){
+CAMLparam1(nil);
+GLuint id=0;
+glGenVertexArrays(1, &id);
+CAMLreturn(Val_int(id));
+}
+
+
+CAMLprim void rglBindVertexArray(value id){
+//CAMLparam1(id);
+GLuint c_id=Int_val(id);
+glBindVertexArray(c_id);
+return ;
+}
+
+CAMLprim void rglDeleteVertexArray(value id){
+//CAMLparam1(type);
+GLuint c_id=Int_val(id);
+glDeleteVertexArrays(1,&c_id);
+return ;
+}
+
+
 
 /****
-Buffer
+Buffer objects
 ******/
-
-
 
 CAMLprim value rglGenBuffer(value nil){
 CAMLparam1(nil);
@@ -392,11 +418,10 @@ CAMLprim void rglBufferSubData(value oKind, value oOffset, value oSize, value oA
 GLuint kind= Int_val(oKind), off=Int_val(oOffset), size=Int_val(oSize);
 
 struct caml_ba_array* arr= Bigarray_val(oArray);
-unsigned int type = arr->flags & BIGARRAY_KIND_MASK;
 
 void* data= arr-> data;
-GLintptr p_off= (GLintptr) ( off*sizes[type]);
-glBufferSubData(kind, p_off,size*sizes[type],data);
+GLintptr p_off= (GLintptr) ( off);
+glBufferSubData(kind, p_off,size,data);
 return;
 }
 

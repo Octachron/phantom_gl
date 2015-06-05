@@ -59,16 +59,16 @@ let frag= Shader.compileFragFrom srf
 let prog=Program.create vert frag;;
 Program.use prog;;
 
-let bGrid=BufferGl.create GlEnum.array vertex GlEnum.stream_draw
-let bHeat=BufferGl.create GlEnum.array heat GlEnum.stream_draw
+let bGrid=BufferGl.createArray vertex
+let bHeat=BufferGl.createArray heat
 
-let bIndex=BufferGl.create GlEnum.element index GlEnum.stream_draw
+let bIndex=BufferGl.createElements GlEnum.quads index
 
 
 
 let [lGrid;lHeat]= List.map (VertexArray.getLoc ~prog) ["pos"; "heat"]
 
-let (vGrid, vHeat) = Overlay.(full 2, full 1);;
+let (vGrid, vHeat) = Overarray.(full 2, full 1);;
 
 VertexArray.withBuffer ~loc:lGrid bGrid vGrid;
 VertexArray.withBuffer ~loc:lHeat bHeat vHeat;;
@@ -102,7 +102,7 @@ let rec loop t=
 Draw.clear GlEnum.(color++depth); 
 diffusion dt ;  
  Uniform.(rot <<< Vec3.rmatrix Vec3.ex (-.t) ) ;
-Draw.elementsWith ~buf:bIndex ~primitives:GlEnum.quads ~start:0 ~len:(BufferGl.size bIndex) ; 
+Draw.elementsWith ~buf:bIndex ~start:0 ~len:(BufferGl.size bIndex) ; 
 Sdlgl.swap_buffers();
 	match Sdlevent.poll() with
 	    | Some Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE }

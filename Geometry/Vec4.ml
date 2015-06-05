@@ -26,7 +26,7 @@ let atype=Bigarray.float32
 let uniform =  vsplit -<- Rgl.uniform4f
 
 
-let converter =let open Overlay in
+let adaptor =let open Overarray in
  { read = ( fun reader -> gen reader );  
   write = ( fun writer v -> for i=0 to dim-1 do  writer i (v@i) done ) }
 
@@ -34,7 +34,7 @@ end
 
 
 module GlMat=struct
-let converter =let open Overlay in
+let adaptor =let open Overarray in
  { read = matrix -<- ( Array.init (dim*dim) ) ;  
   write = ( fun writer v -> 
 	for i=0 to dim-1 do

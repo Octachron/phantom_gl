@@ -1,10 +1,10 @@
 
-type 'a t = int 
+type 'a t = [`Shader] Handle.t
 
-let uid sh = sh
+let untype sh = sh
 
-let createVert ()= Rgl.shaderCreate(0)
-let createFrag ()= Rgl.shaderCreate(1)  
+let createVert ()= Rgl.shaderCreate GlEnum.vertex_shader
+let createFrag ()= Rgl.shaderCreate GlEnum.fragment_shader  
 
 let load  = Rgl.shaderLoad  
 let compile = Rgl.shaderCompile

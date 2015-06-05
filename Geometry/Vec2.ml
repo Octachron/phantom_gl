@@ -6,7 +6,7 @@ include (Vect.With(D2))
 
 
 (** Opengl interface function **)
-let converter =let open Overlay in
+let adaptor =let open Overarray in
  { read = ( fun reader -> gen reader );  
   write = ( fun writer v -> for i=0 to dim-1 do  writer i (v@i) done ) }
 
