@@ -1,18 +1,35 @@
 open FunOp;;
 open Bigarray;;
-	
-Sdl.init [`VIDEO];;
+open Tsdl;;	
 Random.init 121;;
 
-let surface= Sdlvideo.set_video_mode ~w:500 ~h:500 ~bpp:0 [`OPENGL; `DOUBLEBUF];;
+let critical msg = function
+| `Error e ->  Sdl.log "%s: %s" msg e; exit 1
+| `Ok x -> x
 
-Rgl.glewInit();;
-Draw.enable GlEnum.depth_test;;
+let () = critical "Init video system" @@ Sdl.(init Init.video)
 
+let w = critical "Window creation error" @@ 
+  Sdl.create_window ~w:640 ~h:480 "Heat diffusion" Sdl.Window.opengl
+
+let () = 
+  let open Sdl in
+  critical "Gl major version" @@ gl_set_attribute Gl.context_major_version 3; 
+  critical "Gl minor version" @@ gl_set_attribute Gl.context_minor_version 2;
+  critical "Gl profile" @@ gl_set_attribute Gl.context_profile_mask Gl.context_profile_core
+
+let ctx = critical "Context creation error" @@ Sdl.gl_create_context w
+let () = critical "Failed to make context current"  @@ Sdl.gl_make_current w ctx
+
+let () = 
+	  critical "Double buffering" @@ Sdl.gl_set_attribute Sdl.Gl.doublebuffer 1
+	  ; critical "Depth size" @@ Sdl.gl_set_attribute Sdl.Gl.depth_size  32
+
+let () = Rgl.glewInit()
+let () = Draw.enable GlEnum.depth_test;;
+let vao = VAO.( create () <* bind )
 
 let arrayf=Array1.create float32 c_layout
-
-
 
 let foi =float_of_int
 
@@ -25,15 +42,14 @@ let grid size=
 		gridIter size size f;
 		a
 
-
 let gridTess size=
-	let a=Array1.create int32 c_layout (4*(size-1)*(size-1)) in
+  let nvertex = 6 in
+	let a=Array1.create int32 c_layout (nvertex*(size-1)*(size-1)) in
 	let (<= ) pos (i,j) = a.{pos} <- Int32.of_int (i*size+j) in
- 	let indice i j= let pos =4*( j+i*(size-1) )  in
-			 pos    <= (i,j) ;
-			(pos+1) <= (i+1,j) ;
-			(pos+2) <= (i+1,j+1) ;
-			(pos+3) <= (i,j+1)  
+  let vert pos l = List.iteri (fun i x -> (pos + i) <= x ) l in  
+ 	let indice i j=
+    vert ( nvertex*( j+i*(size-1) ) )
+    [ i,j ; i+1,j ; i,j+1; i+1,j+1 ; i,j+1; i+1,j ]  
         in
 	  gridIter (size-1) (size-1) indice;
 	  a
@@ -62,7 +78,7 @@ Program.use prog;;
 let bGrid=BufferGl.createArray vertex
 let bHeat=BufferGl.createArray heat
 
-let bIndex=BufferGl.createElements GlEnum.quads index
+let bIndex=BufferGl.createElements GlEnum.triangles index
 
 
 
@@ -97,19 +113,26 @@ let diffusion dt =
 let dt=0.01
 
 
+let draw t = 
+  Draw.clear GlEnum.(color++depth); 
+  diffusion dt ;  
+  Uniform.(rot <<< Vec3.rmatrix Vec3.ex (-.t) ) ;
+  Draw.elementsWith ~buf:bIndex ~start:0 ~len:(BufferGl.size bIndex) ; 
+  Sdl.gl_swap_window w
 
-let rec loop t= 
-Draw.clear GlEnum.(color++depth); 
-diffusion dt ;  
- Uniform.(rot <<< Vec3.rmatrix Vec3.ex (-.t) ) ;
-Draw.elementsWith ~buf:bIndex ~start:0 ~len:(BufferGl.size bIndex) ; 
-Sdlgl.swap_buffers();
-	match Sdlevent.poll() with
-	    | Some Sdlevent.KEYDOWN { Sdlevent.keysym = Sdlkey.KEY_ESCAPE }
-	    | Some Sdlevent.QUIT -> ()
-	    | _ ->  loop  (t+.dt) ;;
+let rec loop t=
+ draw t;  
+ let open Sdl in 
+  let event = Event.create () in
+	if poll_event (Some event) then
+  match Event.( get event typ |> enum )with
+	    | `Key_down  when Event.(get event keyboard_keycode) = K.escape -> Sdl.quit ()
+	    | `Quit -> Sdl.quit ()
+	    | _ ->  loop (t+.0.05)
+  else loop (t +. 0.05 )
 
-loop 0.;
-Sdl.quit();;
+
+let () = 
+  loop 0.
 
 

@@ -2,14 +2,10 @@
 open Bigarray;;
 open Tsdl
 
-
 let critical msg = function
 | `Error e ->  Sdl.log "%s: %s" msg e; exit 1
 | `Ok x -> x
 
- (* Rgl.glewInit() *)
-
-    
 let () = critical "Init video system" @@ Sdl.(init Init.video)
 
 let w = critical "Window creation error" @@ 
@@ -21,21 +17,16 @@ let () =
   critical "Gl minor version" @@ gl_set_attribute Gl.context_minor_version 2;
   critical "Gl profile" @@ gl_set_attribute Gl.context_profile_mask Gl.context_profile_core
 
-
-
 let ctx = critical "Context creation error" @@ Sdl.gl_create_context w
 let () = critical "Failed to make context current"  @@ Sdl.gl_make_current w ctx
 
 let () = 
 	  critical "Double buffering" @@ Sdl.gl_set_attribute Sdl.Gl.doublebuffer 1
 	  ; critical "Depth size" @@ Sdl.gl_set_attribute Sdl.Gl.depth_size  32
-(*  ; critical "Swap interval" @@ Sdl.gl_set_swap_interval 1 *)
 
 let () = Rgl.glewInit()
 let () = Draw.enable GlEnum.depth_test;;
-
-
-let vao = Rgl.genVAO () <* Rgl.bindVAO
+let vao = VAO.( create () <* bind )
 
 let vertex = 
  let open Vec3 in

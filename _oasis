@@ -19,7 +19,7 @@ Executable  Triangle
 Executable  Laplace
   Path:       .
   MainIs:     Laplace_main.ml
-  BuildDepends: sdl
+  BuildDepends: tsdl
   CSources: opengl_glue.c
   CClib: -lGL -lGLEW
   CompiledObject: native
@@ -28,7 +28,7 @@ Executable  Fractal
   Path:       .
   BuildTools: ocamlbuild
   MainIs:     Fractal_main.ml
-  BuildDepends: sdl
+  BuildDepends: tsdl
   CSources: opengl_glue.c
   CClib: -lGL -lGLEW
   CompiledObject: native
