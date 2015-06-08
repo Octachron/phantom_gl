@@ -1,3 +1,5 @@
+module FunOp=FunOp
+
 
 let load f= 
  let cin = open_in f in

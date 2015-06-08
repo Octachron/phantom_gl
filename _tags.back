@@ -1,4 +1,0 @@
-<**/*.ml> or <**/*.mli> or <**/*.mlpack> or <**/*.ml.depends>: ocaml
-
-
-<Geometry> or <General> or <Opengl> : include

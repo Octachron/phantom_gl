@@ -48,8 +48,8 @@ let index=Array1.of_array int16_unsigned c_layout
 
 let ntri = ( Array1.dim index) 
 
-let vert= Shader.compileVertFrom -<- Utils.load <| "shaders/triangle.vert"
-let frag= Shader.compileFragFrom -<- Utils.load <| "shaders/triangle.frag"
+let vert= Shader.compileVertFrom -<- Utils.load <| "examples/shaders/triangle.vert"
+let frag= Shader.compileFragFrom -<- Utils.load <| "examples/shaders/triangle.frag"
 
 
 let prog=Program.create vert frag <* Program.use;;

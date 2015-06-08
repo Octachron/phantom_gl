@@ -66,8 +66,8 @@ let index=gridTess size
 let heat=gridHeat size 
 
 
-let srv=Utils.load "shaders/laplace.vert"
-let srf=Utils.load "shaders/laplace.frag"
+let srv=Utils.load "examples/shaders/laplace.vert"
+let srf=Utils.load "examples/shaders/laplace.frag"
 
 let vert= Shader.compileVertFrom srv
 let frag= Shader.compileFragFrom srf

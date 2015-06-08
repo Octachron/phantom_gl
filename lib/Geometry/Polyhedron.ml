@@ -15,7 +15,7 @@ let open Vec3 in
 ]
 
 let cube = 
-	let open Vec3.in
+	let open Vec3 in
 	let z=zero in
 	let vx= { z with x=1. }
  	and vy= {z with y=1. }  

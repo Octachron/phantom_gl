@@ -1,34 +1,34 @@
 OASISFormat: 0.4
-Name:        Wyrd
+Name:        PhantomGl
 Version:     0.01
-Synopsis:    Ocaml openGL binding and more
-Authors:     Ego
+Synopsis:    Experimental Ocaml OpenGl binding
+Authors:     Octachron
 License:     LGPL
 Plugins: META (0.4), DevFiles (0.4)
 Buildtools: ocamlbuild
 
+Library phantom_gl
+  Path: lib
+  InternalModules: Geometry/Hyperplane, Geometry/Vec2, Geometry/Vec3, Geometry/Vec4, Geometry/Vect, Typed/Bits, Typed/GlEnum, Typed/Rgl, Typed/Handle, Higher/BufferGl, Higher/Draw, Higher/Overarray, Higher/Program, Higher/Shader, Higher/Texture, Higher/Uniform, Higher/VAO, Higher/VertexArray, utils/FunOp
+  Modules: Geometry/Geometry, Typed/Typed, Higher/Higher, utils/Utils
+  CSources:C/opengl_glue.c
+  CClib: -lGL -lGLEW
 
 Executable  Triangle
-  Path:       .
+  Path:       examples
   MainIs:     Triangle_main.ml
-  BuildDepends: tsdl
-  CSources: opengl_glue.c
-  CClib: -lGL -lGLEW
+  BuildDepends: tsdl, phantom_gl
   CompiledObject: native
   
 Executable  Laplace
-  Path:       .
+  Path:       examples
   MainIs:     Laplace_main.ml
-  BuildDepends: tsdl
-  CSources: opengl_glue.c
-  CClib: -lGL -lGLEW
+  BuildDepends: tsdl, phantom_gl
   CompiledObject: native
   
 Executable  Fractal
-  Path:       .
+  Path:       examples
   BuildTools: ocamlbuild
   MainIs:     Fractal_main.ml
-  BuildDepends: tsdl
-  CSources: opengl_glue.c
-  CClib: -lGL -lGLEW
+  BuildDepends: tsdl, phantom_gl
   CompiledObject: native

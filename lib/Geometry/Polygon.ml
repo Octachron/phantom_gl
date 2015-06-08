@@ -1,6 +1,6 @@
 
 
-type t=Vec3.t list
+type t= [`Vect] Vec3.t list
 
 let cube s= 
 let open Vec3 in 
