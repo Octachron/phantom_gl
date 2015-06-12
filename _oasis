@@ -6,11 +6,12 @@ Authors:     Octachron
 License:     LGPL
 Plugins: META (0.4), DevFiles (0.4)
 Buildtools: ocamlbuild
+AlphaFeatures: ocamlbuild_more_args
+XOCamlbuildExtraArgs: "-use-ocamlfind"
 
 Library phantom_gl
   Path: lib
-  InternalModules: Geometry/Hyperplane, Geometry/Vec2, Geometry/Vec3, Geometry/Vec4, Geometry/Vect, Typed/Bits, Typed/GlEnum, Typed/Rgl, Typed/Handle, Higher/BufferGl, Higher/Draw, Higher/Overarray, Higher/Program, Higher/Shader, Higher/Texture, Higher/Uniform, Higher/VAO, Higher/VertexArray, utils/FunOp
-  Modules: Geometry/Geometry, Typed/Typed, Higher/Higher, utils/Utils
+  Modules: Geometry/Geometry, Typed/Typed, Higher/Higher, utils/Utils, Geometry/Hyperplane, Geometry/Vec2, Geometry/Vec3, Geometry/Vec4, Geometry/Vect, Typed/Bits, Typed/GlEnum, Typed/Rgl, Typed/Handle, Higher/BufferGl, Higher/Draw, Higher/Overarray, Higher/Program, Higher/Shader, Higher/Texture, Higher/Uniform, Higher/VAO, Higher/VertexArray, utils/FunOp
   CSources:C/opengl_glue.c
   CClib: -lGL -lGLEW
 
@@ -18,12 +19,14 @@ Executable  Triangle
   Path:       examples
   MainIs:     Triangle_main.ml
   BuildDepends: tsdl, phantom_gl
+  Install:false
   CompiledObject: native
   
 Executable  Laplace
   Path:       examples
   MainIs:     Laplace_main.ml
-  BuildDepends: tsdl, phantom_gl
+  BuildDepends: tsdl, phantom_gl, tensority, ppx_listlike
+  Install:false
   CompiledObject: native
   
 Executable  Fractal
@@ -31,4 +34,5 @@ Executable  Fractal
   BuildTools: ocamlbuild
   MainIs:     Fractal_main.ml
   BuildDepends: tsdl, phantom_gl
+  Install:false
   CompiledObject: native

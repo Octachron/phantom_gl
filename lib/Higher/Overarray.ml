@@ -14,11 +14,6 @@ let withView data view = {data; layout=view.layout; adaptor = view.adaptor }
 
 let changeView overA view = { overA with layout=view.layout; adaptor = view.adaptor }
 
-
-
-
-
-
 let reader overA index= fun i ->  let s=overA.layout in overA.data.{s.stride*index +s.offset +i }
 let writer overA index= fun i x -> let s=overA.layout in  overA.data.{s.stride*index +s.offset +i }<- x
 

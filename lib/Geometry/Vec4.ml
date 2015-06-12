@@ -54,6 +54,7 @@ let uniform loc m = Rgl.uniformMatrix4fv loc 1  0 (raw m)
 type s= [`Matrix] t
 end
 
+let uniform_mat = (module GlMat: Uniform.WithUniform)
 
 
 

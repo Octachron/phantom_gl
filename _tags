@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: e3f56990b1fda676373277984bc851e7)
+# DO NOT EDIT (digest: 7e70f8dc73e580ad466723088668cef3)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -26,11 +26,16 @@ true: annot, bin_annot
 "examples/Triangle_main.native": pkg_tsdl
 "examples/Triangle_main.native": use_phantom_gl
 # Executable Laplace
+"examples/Laplace_main.native": pkg_ppx_listlike
+"examples/Laplace_main.native": pkg_tensority
 "examples/Laplace_main.native": pkg_tsdl
 "examples/Laplace_main.native": use_phantom_gl
+<examples/*.ml{,i,y}>: pkg_ppx_listlike
+<examples/*.ml{,i,y}>: pkg_tensority
 # Executable Fractal
 "examples/Fractal_main.native": pkg_tsdl
 "examples/Fractal_main.native": use_phantom_gl
 <examples/*.ml{,i,y}>: pkg_tsdl
 <examples/*.ml{,i,y}>: use_phantom_gl
 # OASIS_STOP
+<examples/Laplace.ml>: package(tensority), package(ppx_listlike)

@@ -10,8 +10,8 @@ let send {uid; send} x = send uid x
 let sendTo x {uid;send}= send uid x
 let uid u = u.uid
 
-let ( <<< ) = send
-let ( >>> ) = sendTo
+let ( <% ) = send
+let ( %> ) = sendTo
 
 
 

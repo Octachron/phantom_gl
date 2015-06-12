@@ -68,7 +68,7 @@ let bIndex=BufferGl.createElements GlEnum.triangles index
 let [posLoc; colLoc] = List.map (VertexArray.getLoc ~prog) ["pos"; "color"];;
 
 let vPos= vertex.Overarray.layout
-let vCol= vertex.Overarray.layout;;
+let vCol= colors.Overarray.layout;;
 
 VertexArray.withBuffer ~loc:posLoc bufferPos vPos;;
 VertexArray.withBuffer ~loc:colLoc bCol vCol;;
@@ -85,9 +85,9 @@ let draw bIndex  =
   Draw.clear GlEnum.(color++depth);
   Draw.elementsWith ~buf:bIndex ~start:0 ~len:12 ;
   Sdl.gl_swap_window w
-
+    
 let rec loop t =
-  Uniform.(rot <<<  Vec3.rmatrix ax t   );
+  Uniform.(rot <%  Vec3.rmatrix ax t   );
 	draw bIndex;
   let open Sdl in 
   let event = Event.create () in
@@ -100,7 +100,7 @@ let rec loop t =
 
 let () = 
   let () = let open Uniform in 
-    rot <<< Vec3.id ;
-    proj <<< Vec4.perspective 1. 10. in
+    rot <% Vec3.id ;
+    proj <% Vec4.perspective 1. 10. in
   loop 0. 
 
