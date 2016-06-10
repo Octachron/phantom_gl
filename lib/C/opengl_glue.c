@@ -174,6 +174,23 @@ CAMLprim value rglUniform1f(value mloc,value mx)
   CAMLreturn(Val_unit);
 }
 
+CAMLprim value rglUniform1fv(value mloc, value oArray)
+{
+  CAMLparam2(mloc,oArray);
+  GLuint loc=Int_val(mloc);
+
+struct caml_ba_array* a= Bigarray_val(oArray);
+int ndim = a->num_dims;
+intnat* dims = a->dim;
+void* data=a-> data;
+int size = 1;
+for(int n=0;n<ndim;++n) 
+  size *= dims[n];
+  glUniform1fv(loc,size,data);
+  CAMLreturn(Val_unit);
+}
+
+
 CAMLprim void rglUniform2f(value mloc, value mx, value my){
 	GLuint loc=Int_val(mloc);
         float x=Double_val(mx),y=Double_val(my);

@@ -1,50 +1,50 @@
- open FunOp;;
+open FunOp;;
 open Bigarray;;
 open Tsdl
+open Result
 
 let critical msg = function
-| `Error e ->  Sdl.log "%s: %s" msg e; exit 1
-| `Ok x -> x
+| Error (`Msg e) ->  Sdl.log "%s: %s" msg e; exit 1
+| Ok x -> x
 
 let () = critical "Init video system" @@ Sdl.(init Init.video)
 
-let w = critical "Window creation error" @@ 
+let w = critical "Window creation error" @@
   Sdl.create_window ~w:640 ~h:480 "SDL OpenGL" Sdl.Window.opengl
 
-let () = 
+let () =
   let open Sdl in
-  critical "Gl major version" @@ gl_set_attribute Gl.context_major_version 3; 
+  critical "Gl major version" @@ gl_set_attribute Gl.context_major_version 3;
   critical "Gl minor version" @@ gl_set_attribute Gl.context_minor_version 2;
   critical "Gl profile" @@ gl_set_attribute Gl.context_profile_mask Gl.context_profile_core
 
 let ctx = critical "Context creation error" @@ Sdl.gl_create_context w
 let () = critical "Failed to make context current"  @@ Sdl.gl_make_current w ctx
 
-let () = 
-	  critical "Double buffering" @@ Sdl.gl_set_attribute Sdl.Gl.doublebuffer 1
-	  ; critical "Depth size" @@ Sdl.gl_set_attribute Sdl.Gl.depth_size  32
+let () =
+  critical "Double buffering" @@ Sdl.gl_set_attribute Sdl.Gl.doublebuffer 1
+; critical "Depth size" @@ Sdl.gl_set_attribute Sdl.Gl.depth_size  32
 
 let () = Rgl.glewInit()
 let () = Draw.enable GlEnum.depth_test;;
 let vao = VAO.( create () <* bind )
 
-let vertex = 
+let vertex =
  let open Vec3 in
   Overarray.fromList  (module Gl)  [zero; ex; ey ; ez ]
-	
 
 let colors=
 let open Vec3 in
-	Overarray.fromList (module Gl) [ ey; ey; ey; ey  ]
+Overarray.fromList (module Gl) [ ey; ey; ey; ey  ]
 
 
 let colors2=
-	let open Vec3 in
-	let l=  [ex;ey;ez; const 1. ] in
-	Overarray.fromList (module Gl) l
+  let open Vec3 in
+  let l=  [ex;ey;ez; const 1. ] in
+  Overarray.fromList (module Gl) l
 
 let index=Array1.of_array int16_unsigned c_layout
-	  [| 0 ; 1 ; 2; 0 ; 1 ; 3; 0; 2 ;3; 1 ;2 ;3   |] 
+    [| 0 ; 1 ; 2; 0 ; 1 ; 3; 0; 2 ;3; 1 ;2 ;3   |] 
 
 let ntri = ( Array1.dim index) 
 
@@ -59,13 +59,13 @@ let bufferPos=BufferGl.createArray vertex.Overarray.data
 
 
 
-let bCol=BufferGl.createArray colors.Overarray.data <* BufferGl.writeTo 3 9  colors2.Overarray.data
+let bCol=BufferGl.createArray colors.Overarray.data <* BufferGl.writeTo 0 12  colors2.Overarray.data
 
 let bIndex=BufferGl.createElements GlEnum.triangles index
 
 
-
-let [posLoc; colLoc] = List.map (VertexArray.getLoc ~prog) ["pos"; "color"];;
+let map2 f (x,y)= (f x, f y) 
+let posLoc, colLoc = map2 (VertexArray.getLoc ~prog) ("pos", "color");;
 
 let vPos= vertex.Overarray.layout
 let vCol= colors.Overarray.layout;;

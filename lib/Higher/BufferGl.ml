@@ -47,6 +47,8 @@ let write buffer offset nEl data =
 
 let writeTo offset nEl data buffer =  write buffer offset nEl data 
 
+let rewrite ~buffer ~data = write buffer 0 buffer.nEl data
+
 let map access b=
 bind b;
 let arr=Rgl.mapBuffer (glKind b) access b.baType b.nEl in

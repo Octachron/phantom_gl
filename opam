@@ -1,0 +1,18 @@
+opam-version: "1.2"
+name: "phantom_gl"
+version: "0.1"
+maintainer: "octachron <octa@polychoron.fr>"
+authors: "octachron <octa@polychoron.fr>"
+homepage: ""
+bug-reports: ""
+license: "LGPL 3+"
+build: [
+  [ "oasis" "setup"]
+  ["./configure" "--prefix=%{prefix}%"]
+  [make]
+]
+install: [make "install"]
+remove: ["ocamlfind" "remove" "phantom_gl"]
+depends: [
+  "ocamlfind" "oasis" {build}
+]

@@ -23,9 +23,13 @@ val createArray : ?use:<kind:[`BufferUseType]>  GlEnum.t -> ('a,'b, Bigarray.c_l
 val createElements : ?use:<kind:[`BufferUseType]>  GlEnum.t -> <kind:[`Primitives]> GlEnum.t -> ('a,'b, Bigarray.c_layout) Bigarray.Array1.t -> ('a,'b, [`Element]) t
 
 
-
+(** write buffer offset nEl data *)
 val write : ('a,'b,'c) t -> int -> int ->  ('a,'b, Bigarray.c_layout) Bigarray.Array1.t -> unit
 val writeTo : int -> int ->  ('a,'b, Bigarray.c_layout) Bigarray.Array1.t ->  ('a,'b,'c) t ->  unit
+
+val rewrite : buffer:('a,'b,'c) t ->  data:('a,'b, Bigarray.c_layout) Bigarray.Array1.t -> unit
+
+
 
 (*
 val map : int -> ('a,'b) t -> ('a,'b,Bigarray.c_layout) Bigarray.Array1.t

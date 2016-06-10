@@ -25,14 +25,21 @@ Executable  Triangle
 Executable  Laplace
   Path:       examples
   MainIs:     Laplace_main.ml
-  BuildDepends: tsdl, phantom_gl, tensority, ppx_listlike
+  BuildDepends: tsdl, result, phantom_gl, oceti, ppx_listlike
   Install:false
   CompiledObject: native
   
+Executable  Meandres
+  Path:       examples
+  MainIs:     Meandres.ml
+  BuildDepends: tsdl, result, phantom_gl, oceti, ppx_listlike
+  Install:false
+  CompiledObject: native
+
 Executable  Fractal
   Path:       examples
   BuildTools: ocamlbuild
   MainIs:     Fractal_main.ml
-  BuildDepends: tsdl, phantom_gl
+  BuildDepends: tsdl, result, phantom_gl
   Install:false
   CompiledObject: native

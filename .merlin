@@ -1,0 +1,8 @@
+S lib/*, examples
+S examples
+B _build/*
+PKG result
+PKG tsdl
+PKG tensority
+PKG phantom_gl
+PKG ppx_listlike

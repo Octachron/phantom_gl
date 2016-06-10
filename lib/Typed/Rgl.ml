@@ -28,6 +28,7 @@ external uniform2f : [`Uniform] Handle.t -> float -> float -> unit = "rglUniform
 external uniform3f : [`Uniform] Handle.t -> float -> float -> float-> unit = "rglUniform3f"
 external uniform4f : [`Uniform] Handle.t -> float -> float -> float-> float -> unit = "rglUniform4f"
 
+external uniform1fv : [`Uniform] Handle.t -> (float,Bigarray.float32_elt,Bigarray.c_layout) Bigarray.Array1.t -> unit = "rglUniform1fv"
 
 
 external uniformMatrix2fv : [`Uniform] Handle.t -> int -> int-> float array ->  unit = "rglUniformMatrix2fv"

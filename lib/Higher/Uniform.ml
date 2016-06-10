@@ -19,6 +19,7 @@ let join u1 u2= {  uid=u1.uid,u2.uid; send= ( fun (id1,id2) (x1,x2) ->( u1.send 
 
 
 let scalar=create Rgl.uniform1f
+let scalar_array = create Rgl.uniform1fv
 
 module type WithUniform =sig
 type s

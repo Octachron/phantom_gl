@@ -2,30 +2,36 @@ open Utils.FunOp
 open Bigarray
 open Tsdl
 open Range
+open Result
 
 ;; Random.init 121
 
 let critical msg = function
-| `Error e ->  Sdl.log "%s: %s" msg e; exit 1
-| `Ok x -> x
+| Error (`Msg e) ->  Sdl.log "%s: %s" msg e; exit 1
+| Ok x -> x
 
-let () = critical "Init video system" @@ Sdl.(init Init.video)
+let ( $ ) result msg = critical msg result
 
-let w = critical "Window creation error" @@ 
-  Sdl.create_window ~w:640 ~h:480 "Heat diffusion" Sdl.Window.opengl
+
+let () =
+  Sdl.(init Init.video) $ "Init video system"
+
+let w =
+  Sdl.create_window ~w:640 ~h:480 "Heat diffusion" Sdl.Window.opengl 
+  $ "Window creation error"
 
 let () = 
   let open Sdl in
-  critical "Gl major version" @@ gl_set_attribute Gl.context_major_version 3; 
-  critical "Gl minor version" @@ gl_set_attribute Gl.context_minor_version 2;
-  critical "Gl profile" @@ gl_set_attribute Gl.context_profile_mask Gl.context_profile_core
+  gl_set_attribute Gl.context_major_version 3 $ "Gl major version"; 
+  gl_set_attribute Gl.context_minor_version 2 $ "Gl minor version";
+  gl_set_attribute Gl.context_profile_mask Gl.context_profile_core
+  $ "Gl core profil"
+let ctx = Sdl.gl_create_context w $ "Context creation error"
+let () = Sdl.gl_make_current w ctx $ "Failed to make context current"
 
-let ctx = critical "Context creation error" @@ Sdl.gl_create_context w
-let () = critical "Failed to make context current"  @@ Sdl.gl_make_current w ctx
-
-let () = 
-	  critical "Double buffering" @@ Sdl.gl_set_attribute Sdl.Gl.doublebuffer 1
-	  ; critical "Depth size" @@ Sdl.gl_set_attribute Sdl.Gl.depth_size  32
+let () =
+  Sdl.gl_set_attribute Sdl.Gl.doublebuffer 1 $ "Double buffering error"
+; Sdl.gl_set_attribute Sdl.Gl.depth_size  32 $ "Depth size error"
 
 let () = Rgl.glewInit()
 let () = Draw.enable GlEnum.depth_test;;
@@ -36,7 +42,7 @@ let arrayf=Array1.create float32 c_layout
 let foi =float_of_int
 
 let square size =
-  (range size) <*> (range size) 
+  (range size) ^ (range size) 
 
 let grid size=
   let norm i = (2.*. foi i/. foi (size-1)) -. 1. in
