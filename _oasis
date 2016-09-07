@@ -21,14 +21,14 @@ Executable  Triangle
   BuildDepends: tsdl, phantom_gl
   Install:false
   CompiledObject: native
-  
+
 Executable  Laplace
   Path:       examples
   MainIs:     Laplace_main.ml
   BuildDepends: tsdl, result, phantom_gl, oceti, ppx_listlike
   Install:false
   CompiledObject: native
-  
+
 Executable  Meandres
   Path:       examples
   MainIs:     Meandres.ml
